@@ -1,0 +1,337 @@
+/* =============================== */
+/*         1. GLOBAL STYLES        */
+/* =============================== */
+
+/* CSS Variables for BookRecycle Nepal Brand */
+:root {
+    --font-heading: 'Merriweather', serif;
+    --font-body: 'Open Sans', sans-serif;
+
+    /* Primary (Brand) */
+    --color-primary-brand: #046C4E; /* Emerald Green */
+
+    /* Secondary (Accent) */
+    --color-accent-cta: #FFC107;   /* Amber Yellow */
+
+    /* Base / Backgrounds */
+    --color-bg-white: #FFFFFF;     /* White */
+    --color-bg-light: #F8F9FA;     /* Light Grey */
+
+    /* Text */
+    --color-text: #212529;         /* Dark Grey */
+    
+    /* Neutral */
+    --color-border: #DEE2E6;
+}
+
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--color-text);
+    line-height: 1.6;
+    background-color: var(--color-bg-white);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px; /* More padding for mobile */
+}
+
+.section-title {
+    font-family: var(--font-heading);
+    color: var(--color-primary-brand);
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2.2rem;
+}
+
+/* =============================== */
+/*         2. UTILITIES & COMPONENTS */
+/* =============================== */
+.button {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.button-primary {
+    background-color: var(--color-accent-cta);
+    color: var(--color-text);
+}
+.button-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.button-secondary {
+    background-color: transparent;
+    color: var(--color-primary-brand);
+    border: 2px solid var(--color-primary-brand);
+}
+.button-secondary:hover {
+    background-color: var(--color-primary-brand);
+    color: var(--color-bg-white);
+}
+
+.grid {
+    display: grid;
+    gap: 20px;
+}
+
+/* Default to single column for mobile-first */
+.grid-cols { grid-template-columns: 1fr; }
+
+
+/* =============================== */
+/*         3. HEADER & NAV         */
+/* =============================== */
+.main-header {
+    background-color: var(--color-bg-white);
+    border-bottom: 1px solid var(--color-border);
+}
+.main-header .container {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: var(--color-primary-brand);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.main-nav {
+    margin-top: 15px; /* On mobile, nav drops below */
+    width: 100%;     /* Takes full width on mobile */
+    text-align: center;
+}
+
+.main-nav ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column; /* Stack links vertically on mobile */
+    gap: 10px;
+}
+
+.main-nav a {
+    text-decoration: none;
+    color: var(--color-text);
+    font-weight: 600;
+    padding: 5px;
+    display: block;
+}
+
+.header-actions {
+    display: none; /* Hide for simple mobile view, shown on larger screens */
+}
+
+/* =============================== */
+/*         4. PAGE SECTIONS        */
+/* =============================== */
+
+section {
+    padding: 60px 0;
+}
+
+/* Hero Section */
+.hero-section {
+    background-color: var(--color-primary-brand);
+    color: var(--color-bg-white);
+    text-align: center;
+    padding: 60px 0;
+}
+.hero-section h1 {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+.hero-section p {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+
+/* Categories Section */
+.categories-section {
+    background-color: var(--color-bg-light);
+}
+.category-card {
+    border: 1px solid var(--color-border);
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    background-color: var(--color-bg-white);
+    font-weight: 600;
+}
+
+/* Products Section */
+.product-card {
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: var(--color-bg-white);
+    text-align: center;
+}
+.product-image {
+    width: 100%;
+    height: 200px;
+    background-color: var(--color-bg-light);
+}
+.product-card h3, .product-card p {
+    padding: 0 15px;
+}
+.product-title {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    margin-top: 15px;
+    color: var(--color-text);
+}
+.product-author {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+.product-price {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--color-primary-brand);
+    padding-bottom: 20px;
+    margin-top: 10px;
+}
+
+/* Newsletter Section */
+.newsletter-section {
+    background-color: var(--color-bg-light);
+    text-align: center;
+}
+.newsletter-section h2 { font-family: var(--font-heading); color: var(--color-primary-brand);}
+.newsletter-form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column; /* Stack on mobile */
+    align-items: center;
+    gap: 10px;
+}
+.newsletter-form input {
+    padding: 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* =============================== */
+/*             5. FOOTER           */
+/* =============================== */
+.main-footer {
+    background-color: var(--color-text);
+    color: var(--color-bg-light);
+    padding: 50px 0 20px 0;
+}
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column on mobile */
+    gap: 30px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+.footer-column h4 {
+    font-family: var(--font-heading);
+    color: var(--color-accent-cta);
+    margin-bottom: 15px;
+}
+.footer-column ul { list-style: none; }
+.footer-column a {
+    text-decoration: none;
+    color: var(--color-bg-light);
+    display: block;
+    margin-bottom: 8px;
+}
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid #495057;
+    padding-top: 20px;
+    font-size: 0.9rem;
+}
+
+/* =============================== */
+/*       6. RESPONSIVENESS         */
+/* =============================== */
+
+/* -- Tablet Styles (>= 768px) -- */
+@media (min-width: 768px) {
+    .container {
+        padding: 0 30px;
+    }
+
+    .main-nav {
+        width: auto;
+        margin-top: 0;
+    }
+    .main-nav ul {
+        flex-direction: row; /* Horizontal links */
+        gap: 25px;
+    }
+    .header-actions {
+        display: flex; /* Show header actions */
+        align-items: center;
+        gap: 15px;
+    }
+
+    .grid-cols-tablet-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-cols-tablet-3 { grid-template-columns: repeat(3, 1fr); }
+
+    .categories-section .grid { grid-template-columns: repeat(3, 1fr); }
+    .featured-products-section .grid { grid-template-columns: repeat(2, 1fr); }
+
+    .newsletter-form {
+        flex-direction: row; /* Side-by-side */
+        justify-content: center;
+    }
+    .newsletter-form input {
+        width: 300px;
+    }
+
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr); /* Two columns */
+        text-align: left;
+    }
+}
+
+/* -- Desktop Styles (>= 992px) -- */
+@media (min-width: 992px) {
+    .section-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-section h1 {
+        font-size: 3.5rem;
+    }
+
+    .featured-products-section .grid { grid-template-columns: repeat(4, 1fr); }
+    
+    .footer-grid {
+        grid-template-columns: 2fr 1fr 1fr 1fr; /* Four columns */
+    }
+}
+
+/* -- Large Desktop Styles (>= 1200px) -- */
+@media (min-width: 1200px) {
+    .categories-section .grid { grid-template-columns: repeat(6, 1fr); }
+}

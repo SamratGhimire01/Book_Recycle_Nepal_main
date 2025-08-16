@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}BookRecycle Nepal - Give Knowledge a New Chapter{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <h1>Give Knowledge a New Chapter</h1>
+        <p>The trusted marketplace for used textbooks in Nepal.</p>
+        <a href="#" class="button button-primary">Find Your Book Now</a>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="categories-section">
+    <div class="container">
+        <h2 class="section-title">Browse by Category</h2>
+        <div class="grid grid-cols grid-cols-tablet-3 grid-cols-desktop-6">
+            <div class="category-card">+2 Books</div>
+            <div class="category-card">Bachelors</div>
+            <div class="category-card">Masters</div>
+            <div class="category-card">Medical</div>
+            <div class="category-card">Engineering</div>
+            <div class="category-card">Novels</div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products Section -->
+<section class="featured-products-section">
+    <div class="container">
+        <h2 class="section-title">Recently Added Books</h2>
+        <div class="grid grid-cols grid-cols-tablet-2 grid-cols-desktop-4">
+            <!-- Product Card 1 -->
+            <div class="product-card">
+                <div class="product-image"></div>
+                <h3 class="product-title">Computer Networks</h3>
+                <p class="product-author">Andrew S. Tanenbaum</p>
+                <p class="product-price">NPR 1200</p>
+            </div>
+            <!-- Product Card 2 -->
+            <div class="product-card">
+                <div class="product-image"></div>
+                <h3 class="product-title">Fundamentals of Physics</h3>
+                <p class="product-author">Halliday, Resnick, Walker</p>
+                <p class="product-price">NPR 850</p>
+            </div>
+            <!-- Product Card 3 -->
+            <div class="product-card">
+                <div class="product-image"></div>
+                <h3 class="product-title">Organic Chemistry</h3>
+                <p class="product-author">Paula Yurkanis Bruice</p>
+                <p class="product-price">NPR 1500</p>
+            </div>
+            <!-- Product Card 4 -->
+            <div class="product-card">
+                <div class="product-image"></div>
+                <h3 class="product-title">Economics</h3>
+                <p class="product-author">Paul A. Samuelson</p>
+                <p class="product-price">NPR 990</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="newsletter-section">
+    <div class="container">
+        <h2>Stay Updated</h2>
+        <p>Get notified about new books in your course and special offers.</p>
+        <form class="newsletter-form">
+            <input type="email" placeholder="Enter your email address" required>
+            <button type="submit" class="button button-primary">Subscribe</button>
+        </form>
+    </div>
+</section>
+
+{% endblock %}

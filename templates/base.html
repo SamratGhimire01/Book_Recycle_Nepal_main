@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>{% block title %}BookRecycle Nepal{% endblock %}</title>
+    
+    <meta name="description" content="The trusted marketplace for buying and selling used textbooks in Nepal.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- This links to our CSS file -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container">
+            <a href="#" class="logo">BookRecycle Nepal</a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Categories</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="#">My Profile</a>
+                <a href="#" class="button button-secondary">Sell Your Book</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- The content from index.html will be placed here -->
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column"><h4>BookRecycle Nepal</h4><p>Our mission is to make education affordable and sustainable in Nepal.</p></div>
+                <div class="footer-column"><h4>Quick Links</h4><ul><li><a href="#">Home</a></li><li><a href="#">About Us</a></li><li><a href="#">Contact</a></li><li><a href="#">FAQ</a></li></ul></div>
+                <div class="footer-column"><h4>Legal</h4><ul><li><a href="#">Terms of Service</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
+                <div class="footer-column"><h4>Contact Us</h4><p>Kathmandu, Nepal<br>contact@bookrecycle.np</p></div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2025 BookRecycle Nepal. All rights reserved.</p></div>
+        </div>
+    </footer>
+
+</body>
+</html>
