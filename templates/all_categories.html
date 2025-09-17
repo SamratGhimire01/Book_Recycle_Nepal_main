@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Browse by Category | BookRecycle Nepal{% endblock %}
+
+{% block content %}
+<main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+    <h1 class="section-title" style="margin-bottom: 2rem;">Browse All Categories</h1>
+
+    {% if categories %}
+        <div class="category-grid">
+    {% for category in categories %}
+        <!-- UPDATE THIS LINK -->
+        <a href="{% url 'category_detail' category.id %}" class="category-card-link">
+            <div class="category-card">
+                <h3>{{ category.name }}</h3>
+                <p>{{ category.courses.count }} Courses</p>
+            </div>
+        </a>
+    {% endfor %}
+</div>
+    {% else %}
+        <p style="text-align: center;">No categories have been created yet.</p>
+    {% endif %}
+
+</main>
+{% endblock %}

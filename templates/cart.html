@@ -1,0 +1,98 @@
+<!-- templates/cart.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Your Shopping Cart | BookRecycle Nepal{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="container cart-page-container">
+    <h1 class="section-title">Your Shopping Cart</h1>
+
+    <div class="cart-layout">
+        <!-- Left Side: Cart Items with Checkboxes -->
+        <div class="cart-items-list">
+            {% for book in books_in_cart %}
+            <div class="cart-item">
+                
+                <!-- ============================================= -->
+                <!-- == START: NEW WRAPPER FOR CHECKBOX & IMAGE == -->
+                <!-- ============================================= -->
+                <div class="item-visuals">
+                    <input type="checkbox" class="item-checkbox" data-price="{{ book.price }}" checked>
+                    <a href="{% url 'book_detail' book.id %}" class="cart-item-image-link">
+                        <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" class="cart-item-image">
+                    </a>
+                </div>
+                <!-- ============================================= -->
+                <!-- == END: NEW WRAPPER                        == -->
+                <!-- ============================================= -->
+
+                <div class="cart-item-info">
+                    <a href="{% url 'book_detail' book.id %}" class="item-title">{{ book.title }}</a>
+                    <p class="item-seller">Sold by: {{ book.seller.username }}</p>
+                    <p class="item-condition">Condition: {{ book.condition }}</p>
+                </div>
+                
+                <div class="cart-item-price-and-remove">
+                    <p class="item-price">Rs. {{ book.price|floatformat:0 }}</p>
+                    <form class="remove-from-cart-form" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="book_id" value="{{ book.id }}">
+                        <button type="submit" class="remove-link">Remove</button>
+                    </form>
+                </div>
+            </div>
+            {% empty %}
+                <div class="empty-cart-message">
+                    <i class="fas fa-shopping-cart"></i>
+                    <h2>Your cart is empty.</h2>
+                    <a href="{% url 'listed_books' %}" class="button button-primary">Continue Shopping</a>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Right Side: Order Summary -->
+        {% if books_in_cart %}
+        <div class="order-summary-sticky-container">
+            <div class="order-summary">
+                <h2 class="summary-title">Order Summary</h2>
+                <div class="summary-row">
+                    <span>Subtotal (<span id="itemCount">{{ books_in_cart|length }}</span> items)</span>
+                    <span id="subtotalDisplay">Rs. {{ subtotal|floatformat:2 }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery Charge</span>
+                    <span id="deliveryDisplay">Rs. {{ delivery_charge|floatformat:2 }}</span>
+                </div>
+                
+                <!-- Voucher Section -->
+                <div class="voucher-section">
+                    <form id="voucherForm" method="GET" action="{% url 'view_cart' %}">
+                        <input type="text" name="voucher" placeholder="Enter Voucher Code" class="voucher-input" value="{{ voucher_code|default:'' }}">
+                        <button type="submit" class="voucher-btn">Apply</button>
+                    </form>
+                </div>
+                
+                {% if voucher_discount > 0 %}
+                <div class="summary-row discount">
+                    <span>Voucher Discount ("{{ voucher_code }}")</span>
+                    <span>- Rs. {{ voucher_discount|floatformat:2 }}</span>
+                </div>
+                {% endif %}
+
+                <hr class="summary-divider">
+                <div class="summary-row total">
+                    <span>Grand Total</span>
+                    <span id="grandTotalDisplay">Rs. {{ grand_total|floatformat:2 }}</span>
+                </div>
+                <a href="#" class="button button-primary checkout-btn">Proceed to Checkout</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

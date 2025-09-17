@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ book.title }} | BookRecycle Nepal{% endblock %}
+
+{% block extra_head %}
+    <!-- Link to the dedicated stylesheet for this page -->
+    <link rel="stylesheet" href="{% static 'css/book-detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="container book-detail-container">
+    <div class="book-detail-card">
+        
+        <!-- ======================== -->
+        <!-- == Image Gallery      == -->
+        <!-- ======================== -->
+        <div class="gallery-container">
+            <div class="main-image">
+                {% if book.cover_image %}
+                    <img id="mainBookImage" src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+                {% else %}
+                    <img id="mainBookImage" src="{% static 'images/placeholder.png' %}" alt="No image available">
+                {% endif %}
+            </div>
+            {% if book.images.all|length > 1 %}
+            <div class="thumbnail-strip">
+                <!-- First thumbnail is always the cover image -->
+                <div class="thumbnail active">
+                    <img src="{{ book.cover_image.url }}" alt="Cover image thumbnail" onclick="changeMainImage('{{ book.cover_image.url }}', this)">
+                </div>
+                <!-- Loop through the other images (excluding the cover) -->
+                {% for image in book.images.all %}
+                    {% if image.image.url != book.cover_image.url %}
+                        <div class="thumbnail">
+                            <img src="{{ image.image.url }}" alt="Book image thumbnail" onclick="changeMainImage('{{ image.image.url }}', this)">
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- ======================== -->
+        <!-- == Book Information   == -->
+        <!-- ======================== -->
+        <div class="info-container">
+            <h1 class="book-title">{{ book.title }}</h1>
+            
+            <div class="seller-info">
+                <span>Sold by: <a href="#" class="seller-link">{{ book.seller.username }}</a></span>
+                <span>Listed {{ book.created_at|timesince }} ago</span>
+            </div>
+
+            <div class="price-box">
+                <span class="current-price">Rs. {{ book.price|floatformat:0 }}</span>
+                {% if book.original_price %}
+                    <span class="original-price">Rs. {{ book.original_price|floatformat:0 }}</span>
+                {% endif %}
+            </div>
+            
+            <div class="book-meta">
+                <p><strong>Condition:</strong> <span class="condition-tag">{{ book.condition }}</span></p>
+                <p><strong>Category:</strong> {{ book.category.name }}</p>
+                <p><strong>Course:</strong> {{ book.course.name }}</p>
+            </div>
+
+            <div class="actions">
+                 <form class="add-to-cart-form" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="book_id" value="{{ book.id }}">
+        <button type="submit" class="add-to-cart-btn">
+            <i class="fas fa-shopping-cart"></i> Add to Cart
+        </button>
+    </form>
+                   <form class="toggle-favorite-form" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="book_id" value="{{ book.id }}">
+        <!-- We will use JS to check if the book is already a favorite and add the 'is-favorite' class -->
+        <button type="submit" class="favorite-btn bc-heart-icon">
+            <i class="far fa-heart"></i> <span>Add to Favorites</span>
+        </button>
+    </form>
+            </div>
+            
+            <div class="description">
+    <h3 class="section-heading">Description</h3>
+    
+    {% if book.description %}
+        <!-- If the book has a description, display it -->
+        <p>{{ book.description|linebreaksbr }}</p>
+    {% else %}
+        <!-- If the seller did not provide a description, show a default message -->
+        <p>The seller has not provided any additional details for this book.</p>
+    {% endif %}
+</div>
+        </div>
+    </div>
+
+    <!-- ============================================= -->
+    <!-- == SIMILAR PRODUCTS SECTION                == -->
+    <!-- ============================================= -->
+    {% if similar_books %}
+    <section class="similar-products-section">
+        <h2 class="section-heading">Similar Products</h2>
+        <div class="book-listing-grid">
+            {% for similar_book in similar_books %}
+                <!-- Reusing our perfected book card component -->
+                {% include 'components/_book_card.html' with book=similar_book %}
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- ============================================= -->
+    <!-- == REVIEWS SECTION                         == -->
+    <!-- ============================================= -->
+    <section class="reviews-section">
+        <h2 class="section-heading">Reviews ({{ reviews.count }})</h2>
+        <div class="reviews-container">
+            {% for review in reviews %}
+            <div class="review-card">
+                <div class="review-author">
+                    <div class="author-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <p class="author-name">{{ review.user.username }}</p>
+                        <p class="review-date">{{ review.created_at|date:"F d, Y" }}</p>
+                    </div>
+                </div>
+                <div class="review-content">
+                    <div class="star-rating">
+                        <!-- Loop 5 times to create 5 stars -->
+                        {% for i in "12345" %}
+                            <!-- If the loop number is less than or equal to the review's rating, fill the star -->
+                            <i class="fas fa-star {% if i|add:0 <= review.rating %}filled{% endif %}"></i>
+                        {% endfor %}
+                    </div>
+                    <p class="review-comment">{{ review.comment }}</p>
+                </div>
+            </div>
+            {% empty %}
+                <!-- This message shows if the 'reviews' list is empty -->
+                <div class="no-reviews-message">
+                    <p>This book has not been reviewed yet. Be the first!</p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+
+<script>
+    // Simple JavaScript to handle thumbnail clicks for the image gallery
+    function changeMainImage(newImageUrl, thumbnailElement) {
+        document.getElementById('mainBookImage').src = newImageUrl;
+        // Handle the 'active' state for the border highlight
+        document.querySelectorAll('.thumbnail').forEach(el => el.classList.remove('active'));
+        thumbnailElement.parentElement.classList.add('active');
+    }
+</script>
+{% endblock %}

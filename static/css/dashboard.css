@@ -1,0 +1,40 @@
+/* static/css/dashboard.css */
+.dashboard-container { padding-top: 2rem; padding-bottom: 4rem; }
+.dashboard-header { font-size: 2rem; font-weight: 700; margin-bottom: 2rem; }
+.dark-mode .dashboard-header { color: var(--color-text-light); }
+
+/* Stats Grid */
+.stats-grid, .revenue-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
+.stat-card, .revenue-card { background-color: var(--color-bg-white); padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+.dark-mode .stat-card, .dark-mode .revenue-card { background-color: var(--color-dark-card); }
+.stat-card h4, .revenue-card h4 { font-size: 0.9rem; font-weight: 500; color: #6b7280; margin-bottom: 0.5rem; }
+.dark-mode .stat-card h4, .dark-mode .revenue-card h4 { color: #9ca3af; }
+.stat-card p, .revenue-card p { font-size: 2rem; font-weight: 700; }
+.dark-mode .stat-card p, .dark-mode .revenue-card p { color: var(--color-text-light); }
+
+/* Book List Section */
+.book-list-section { margin-top: 3rem; }
+.section-heading { font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem; }
+.dark-mode .section-heading { color: var(--color-text-light); }
+.book-table-wrapper { overflow-x: auto; background-color: var(--color-bg-white); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+.dark-mode .book-table-wrapper { background-color: var(--color-dark-card); }
+.book-table { width: 100%; border-collapse: collapse; }
+.book-table th, .book-table td { padding: 1rem; text-align: left; border-bottom: 1px solid #eee; }
+.dark-mode .book-table th, .dark-mode .book-table td { border-color: #374151; }
+.book-table th { font-size: 0.8rem; font-weight: 600; color: #6b7280; text-transform: uppercase; }
+.dark-mode .book-table th { color: #9ca3af; }
+.book-title-cell { display: flex; align-items: center; gap: 1rem; }
+.book-title-cell img { width: 40px; height: 50px; object-fit: cover; border-radius: 4px; }
+.status-tag { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+.status-available { background-color: #d1fae5; color: #065f46; }
+.status-sold { background-color: #fee2e2; color: #991b1b; }
+.status-pending { background-color: #feefc7; color: #92400e; }
+.action-btn { padding: 0.4rem 0.8rem; border-radius: 6px; text-decoration: none; font-size: 0.8rem; font-weight: 500; }
+.edit-btn { background-color: #dbeafe; color: #1e40af; }
+.delete-btn { background-color: #fee2e2; color: #991b1b; }
+.rejection-reason {
+    font-size: 0.75rem;
+    color: #991b1b; /* Dark red */
+    margin-top: 0.25rem;
+    font-style: italic;
+}

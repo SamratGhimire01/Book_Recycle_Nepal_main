@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ profile_user.username }}'s Profile | BookRecycle Nepal{% endblock %}
+
+{% block extra_head %}
+    <!-- Link to the dedicated stylesheet for this page -->
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="container profile-page-container">
+    
+    <!-- ======================== -->
+    <!-- == Profile Header     == -->
+    <!-- ======================== -->
+    <div class="profile-header">
+        <div class="profile-avatar">
+            <img src="{{ profile_user.profile.profile_picture.url }}" alt="{{ profile_user.username }}'s profile picture">
+        </div>
+        <div class="profile-info">
+            <div class="info-top-row">
+                <h1 class="username">{{ profile_user.username }}</h1>
+                {% if profile_user.profile.is_verified %}
+                    <span class="verified-badge"><i class="fas fa-check-circle"></i> Verified Seller</span>
+                {% endif %}
+            </div>
+            
+            <div class="profile-stats">
+                <span><strong>{{ books_for_sale.count }}</strong> books for sale</span>
+                <span><strong>{{ follower_count }}</strong> followers</span>
+                <span><strong>{{ following_count }}</strong> following</span>
+            </div>
+            
+            <div class="profile-rating">
+                {% if average_rating %}
+                    <span class="avg-rating">{{ average_rating|floatformat:1 }}</span>
+                    <div class="star-rating">
+                        <!-- Star display logic -->
+                        {% for i in "12345" %}
+                            <i class="fas fa-star {% if i|add:0 <= average_rating|floatformat:0|add:0 %}filled{% endif %}"></i>
+                        {% endfor %}
+                    </div>
+                    <span>({{ profile_user.reviews_received.count }} ratings)</span>
+                {% else %}
+                    <span class="no-rating">No ratings yet</span>
+                {% endif %}
+            </div>
+            
+            <p class="profile-bio">{{ profile_user.profile.bio|default:"This user has not written a bio yet." }}</p>
+
+            <div class="profile-actions">
+                <!-- Follow/Unfollow Button -->
+                {% if user.is_authenticated and user != profile_user %}
+                    <form id="followForm" method="POST">
+            {% csrf_token %}
+            <!-- We send the ID of the user whose profile we are viewing -->
+            <input type="hidden" name="user_to_follow_id" value="{{ profile_user.id }}">
+            
+            <button type="submit" id="followBtn" class="button {% if is_following %}btn-secondary-profile{% else %}btn-primary-profile{% endif %}">
+                {% if is_following %}Unfollow{% else %}Follow{% endif %}
+            </button>
+        </form>
+                {% elif user.is_authenticated and user == profile_user %}
+        <a href="{% url 'edit_profile' %}" class="button btn-secondary-profile">Edit Profile</a>
+    {% endif %}
+                
+                <button class="button btn-secondary-profile">
+        <i class="fas fa-comment-dots"></i> Chat with Seller
+    </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================== -->
+    <!-- == Profile Content    == -->
+    <!-- ======================== -->
+    <div class="profile-content">
+        <h2 class="section-heading">Books For Sale by {{ profile_user.username }}</h2>
+        {% if books_for_sale %}
+            <div class="book-listing-grid">
+                {% for book in books_for_sale %}
+                    {% include 'components/_book_card.html' with book=book %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-books-message">
+                <p>{{ profile_user.username }} has no books for sale right now.</p>
+            </div>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

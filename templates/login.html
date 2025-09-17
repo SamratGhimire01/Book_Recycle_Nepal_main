@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login | BookRecycle Nepal{% endblock %}
+
+{% block content %}
+<main class="auth-page-container">
+  <div class="auth-card">
+    <h2 class="auth-card-header">Login to Your Account</h2>
+    
+    <!-- Standard Login Form -->
+    <form method="post" class="auth-form">
+        {% csrf_token %}
+        
+        {% if form.errors %}
+        <div class="auth-error-message">
+            Please enter a correct username and password.
+        </div>
+        {% endif %}
+        
+        <div class="form-group">
+            <label for="id_username">Username</label>
+            <input type="text" name="username" autofocus autocapitalize="none" autocomplete="username" 
+                   required id="id_username" class="auth-form-input">
+        </div>
+        
+        <div class="form-group">
+            <label for="id_password">Password</label>
+            <input type="password" name="password" autocomplete="current-password" 
+                   required id="id_password" class="auth-form-input">
+        </div>
+        
+        <div>
+            <button type="submit" class="auth-submit-btn">Login</button>
+        </div>
+    </form>
+    
+    <!-- Social Login Options -->
+    <div class="divider-container">
+        <span>Or continue with</span>
+    </div>
+    
+    <div class="social-btn-container">
+        <a href="#" class="social-btn">
+            <i class="fab fa-google"></i>
+            Continue with Google
+        </a>
+        <a href="#" class="social-btn">
+            <i class="fab fa-facebook"></i>
+            Continue with Facebook
+        </a>
+    </div>
+    
+    <div class="auth-redirect-link">
+        <p>
+            Don't have an account? 
+            <a href="{% url 'register' %}">Register here</a>
+        </p>
+    </div>
+  </div>
+</main>
+{% endblock %}

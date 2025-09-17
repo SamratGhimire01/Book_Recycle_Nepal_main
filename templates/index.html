@@ -1,80 +1,102 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}BookRecycle Nepal - Give Knowledge a New Chapter{% endblock %}
+{% block title %}BookRecycle Nepal | Second-hand Book Marketplace{% endblock %}
 
 {% block content %}
 
-<!-- Hero Section -->
+<!-- ======================= -->
+<!--       HERO SECTION      -->
+<!-- ======================= -->
 <section class="hero-section">
-    <div class="container">
-        <h1>Give Knowledge a New Chapter</h1>
-        <p>The trusted marketplace for used textbooks in Nepal.</p>
-        <a href="#" class="button button-primary">Find Your Book Now</a>
+    <div class="hero-background">
+        <div class="blob animate-blob"></div>
+        <div class="blob animate-blob animation-delay-4000"></div>
     </div>
-</section>
-
-<!-- Categories Section -->
-<section class="categories-section">
-    <div class="container">
-        <h2 class="section-title">Browse by Category</h2>
-        <div class="grid grid-cols grid-cols-tablet-3 grid-cols-desktop-6">
-            <div class="category-card">+2 Books</div>
-            <div class="category-card">Bachelors</div>
-            <div class="category-card">Masters</div>
-            <div class="category-card">Medical</div>
-            <div class="category-card">Engineering</div>
-            <div class="category-card">Novels</div>
+    <div class="container hero-content">
+        <div class="hero-text">
+            <h1>Give Your Books<br>a <span class="gradient-text">New Chapter.</span></h1>
+            <p>Nepal's premier marketplace for recycling knowledge. Buy affordable second-hand books or sell yours to a new generation of learners.</p>
+            <div class="hero-search">
+                <input type="text" placeholder="Find your next book by title or author...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+            <div class="hero-buttons">
+                <a href="{% url 'sell_book' %}" class="button button-primary">Start Selling</a>
+                <a href="#listings" class="button button-secondary">Browse Books</a>
+            </div>
         </div>
-    </div>
-</section>
-
-<!-- Featured Products Section -->
-<section class="featured-products-section">
-    <div class="container">
-        <h2 class="section-title">Recently Added Books</h2>
-        <div class="grid grid-cols grid-cols-tablet-2 grid-cols-desktop-4">
-            <!-- Product Card 1 -->
-            <div class="product-card">
-                <div class="product-image"></div>
-                <h3 class="product-title">Computer Networks</h3>
-                <p class="product-author">Andrew S. Tanenbaum</p>
-                <p class="product-price">NPR 1200</p>
+        <div class="hero-visuals">
+            <div class="floating-book-container animate-float" style="top: 15%; left: 5%; width: 160px; z-index: 2; animation-delay: -1.5s;">
+                <img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1505049943i/36215953.jpg" alt="Book cover" class="book-image-float rotate-6">
             </div>
-            <!-- Product Card 2 -->
-            <div class="product-card">
-                <div class="product-image"></div>
-                <h3 class="product-title">Fundamentals of Physics</h3>
-                <p class="product-author">Halliday, Resnick, Walker</p>
-                <p class="product-price">NPR 850</p>
+            <div class="floating-book-container animate-float" style="top: 50%; left: 20%; width: 140px; z-index: 1;">
+                <img src="https://ncert.nic.in/textbook/pdf/lebs1cc.jpg" alt="Book cover" class="book-image-float rotate-3">
             </div>
-            <!-- Product Card 3 -->
-            <div class="product-card">
-                <div class="product-image"></div>
-                <h3 class="product-title">Organic Chemistry</h3>
-                <p class="product-author">Paula Yurkanis Bruice</p>
-                <p class="product-price">NPR 1500</p>
+            <div class="floating-book-container animate-float" style="top: 10%; left: 50%; width: 180px; z-index: 3; animation-delay: -0.5s;">
+                <img src="https://heritagebooks.com.np/wp-content/uploads/2023/07/A-Quick-Reference-Book-for-Civil-Engineering-Licensing-Examination-10000-MCQS-with-Hints-2.jpg" alt="Book cover" class="book-image-float rotate-3">
             </div>
-            <!-- Product Card 4 -->
-            <div class="product-card">
-                <div class="product-image"></div>
-                <h3 class="product-title">Economics</h3>
-                <p class="product-author">Paul A. Samuelson</p>
-                <p class="product-price">NPR 990</p>
+            <div class="floating-book-container animate-float" style="top: 45%; left: 70%; width: 150px; z-index: 2; animation-delay: -3s;">
+                <img src="https://www.biblionepal.com/cdn/shop/files/9781847941831.jpg?v=1685521594" alt="Book cover" class="book-image-float rotate-12">
             </div>
         </div>
     </div>
 </section>
 
-<!-- Newsletter Section -->
-<section class="newsletter-section">
+<!-- ======================= -->
+<!--     FEATURES SECTION    -->
+<!-- ======================= -->
+<section class="features-section">
     <div class="container">
-        <h2>Stay Updated</h2>
-        <p>Get notified about new books in your course and special offers.</p>
-        <form class="newsletter-form">
-            <input type="email" placeholder="Enter your email address" required>
-            <button type="submit" class="button button-primary">Subscribe</button>
-        </form>
+        <h2 class="section-title">Why Choose BookRecycle?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon bg-green"><i class="fas fa-leaf"></i></div>
+                <h3>Eco-Friendly</h3>
+                <p>Reduce paper waste by giving books a second life.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon bg-teal"><i class="fas fa-wallet"></i></div>
+                <h3>Save Money</h3>
+                <p>Buy textbooks at 40-70% off retail prices.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon bg-yellow"><i class="fas fa-truck"></i></div>
+                <h3>Easy Pickup</h3>
+                <p>We arrange pickup from your location.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================= -->
+<!--  FEATURED BOOKS SECTION -->
+<!-- ======================= -->
+<section id="listings" class="listings-section">
+    <div class="container">
+        
+        <!-- This header correctly aligns the title and the "View All" link -->
+        <div class="section-header">
+            <h2 class="section-title" style="text-align: left; margin-bottom: 0;">Featured Books</h2>
+            <a href="{% url 'listed_books' %}" class="view-all-link">
+                View All <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+        
+        {% if latest_books %}
+            <!-- Use ONE grid container with the correct class -->
+            <div class="book-listing-grid">
+                
+                <!-- Use the correct variable name 'latest_books' from the view -->
+                {% for book in latest_books %}
+                    {% include 'components/_book_card.html' with book=book %}
+                {% endfor %}
+
+            </div>
+        {% else %}
+            <p style="text-align: center; padding: 2rem;">No featured books available at the moment.</p>
+        {% endif %}
+
     </div>
 </section>
 

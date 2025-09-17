@@ -1,0 +1,42 @@
+<!-- templates/listed_books.html -->
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}All Available Books | BookRecycle Nepal{% endblock %}
+
+{% block content %}
+<main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+    <h1 class="section-title" style="margin-bottom: 2rem;">All Available Books</h1>
+    
+    {% include 'components/_search_filter_bar.html' %}
+
+    {% if books %}
+        <!-- THIS IS THE GRID CONTAINER -->
+        <div class="book-card-container">
+            
+            <!-- ============================================= -->
+            <!-- == THIS LOOP IS THE CRITICAL FIX           == -->
+            <!-- ============================================= -->
+            {% for book in books %}
+                <!-- For each book, we include our reusable card component -->
+                {% include 'components/_book_card.html' with book=book %}
+            {% endfor %}
+            <!-- ============================================= -->
+            <!-- == END OF THE FIX                            == -->
+            <!-- ============================================= -->
+
+        </div>
+    {% else %}
+        <!-- This message now correctly shows if there are no books OR if the search finds nothing -->
+        <p style="text-align: center; padding: 2rem; color: #6b7280;">No books found. Try a different search or check back later!</p>
+    {% endif %}
+
+</main>
+
+<script>
+    // This script should be moved to your main.js file eventually,
+    // but for now, we ensure the URL is available to the script.
+    const liveSearchUrl = "{% url 'live_search_books' %}";
+</script>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ category.name }} Books | BookRecycle Nepal{% endblock %}
+
+{% block content %}
+<main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+    
+    <!-- This title correctly shows which category you are viewing -->
+    <h1 class="section-title" style="margin-bottom: 2rem;">Books in: {{ category.name }}</h1>
+
+    <!-- It includes the reusable search bar -->
+    {% include 'components/_search_filter_bar.html' %}
+
+    {% if books %}
+        <div class="book-listing-grid">
+            
+            <!-- ======================================================= -->
+            <!-- == THIS FOR LOOP IS THE ONLY THING THAT WAS MISSING  == -->
+            <!-- ======================================================= -->
+            {% for book in books %}
+                <!-- This will now loop through ONLY the books for this specific category -->
+                {% include 'components/_book_card.html' with book=book %}
+            {% endfor %}
+
+        </div>
+    {% else %}
+        <p style="text-align: center; padding: 2rem; color: #6b7280;">There are currently no books available in this category.</p>
+    {% endif %}
+
+</main>
+
+<!-- The script for live search is not needed here because it's handled by main.js now -->
+{% endblock %}

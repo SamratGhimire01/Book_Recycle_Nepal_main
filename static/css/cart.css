@@ -1,0 +1,270 @@
+/* static/css/cart.css */
+
+.cart-page-container { 
+    padding-top: 2rem; 
+    padding-bottom: 4rem; 
+}
+
+.cart-layout { 
+    display: grid; 
+    grid-template-columns: 1fr; 
+    gap: 2rem; 
+    align-items: flex-start; 
+}
+
+@media (min-width: 1024px) { 
+    .cart-layout { grid-template-columns: 2fr 1fr; } 
+}
+
+/* --- Cart Items List --- */
+.cart-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.cart-item {
+    display: flex;
+    gap: 1.5rem; /* Increased gap for better spacing */
+    padding: 1.5rem;
+    background-color: var(--color-bg-white);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    align-items: flex-start; /* Align items to the top */
+}
+.dark-mode .cart-item { 
+    background-color: var(--color-dark-card); 
+}
+
+/* --- THIS IS THE NEW LAYOUT LOGIC --- */
+.item-visuals {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0; /* Prevent this column from shrinking */
+}
+
+.item-visuals .item-checkbox {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+}
+
+.cart-item-image {
+    width: 80px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+/* --- END OF NEW LAYOUT LOGIC --- */
+
+.cart-item-info {
+    flex-grow: 1;
+}
+
+.item-title {
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--color-text-dark);
+    font-size: 1.1rem;
+}
+.dark-mode .item-title { color: var(--color-text-light); }
+.item-title:hover { text-decoration: underline; }
+
+.item-seller, 
+.item-condition {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+}
+.dark-mode .item-seller, 
+.dark-mode .item-condition { color: #9ca3af; }
+
+.cart-item-price-and-remove {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start; /* Align to the top */
+    min-width: 80px;
+}
+
+.item-price {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.remove-link {
+    font-size: 0.875rem;
+    color: #ef4444;
+    text-decoration: none;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+.remove-link:hover { text-decoration: underline; }
+
+/* Empty Cart Message */
+.empty-cart-message { 
+    text-align: center; 
+    padding: 4rem 2rem; 
+    background-color: var(--color-bg-white); 
+    border-radius: 12px; 
+}
+.dark-mode .empty-cart-message { background-color: var(--color-dark-card); }
+
+.empty-cart-message i { 
+    font-size: 3rem; 
+    color: #d1d5db; 
+    margin-bottom: 1rem; 
+}
+.dark-mode .empty-cart-message i { color: #4b5563; }
+
+.empty-cart-message h2 { 
+    font-size: 1.5rem; 
+    font-weight: 600; 
+    margin-bottom: 0.5rem; 
+}
+
+.empty-cart-message p { 
+    color: #6b7280; 
+    margin-bottom: 1.5rem; 
+}
+.dark-mode .empty-cart-message p { color: #9ca3af; }
+
+.empty-cart-message .button { 
+    border-radius: 8px; 
+}
+
+/* Order Summary */
+.order-summary-sticky-container { 
+    position: sticky; 
+    top: 100px; 
+}
+
+.order-summary { 
+    background-color: var(--color-bg-white); 
+    padding: 1.5rem; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+}
+.dark-mode .order-summary { background-color: var(--color-dark-card); }
+
+.summary-title { 
+    font-size: 1.25rem; 
+    font-weight: 600; 
+    margin-bottom: 1.5rem; 
+}
+
+.summary-row { 
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 1rem; 
+}
+
+.shipping-note { 
+    font-style: italic; 
+    color: #6b7280; 
+}
+.dark-mode .shipping-note { color: #9ca3af; }
+
+.summary-divider { 
+    border: none; 
+    border-top: 1px solid #eee; 
+    margin: 1.5rem 0; 
+}
+.dark-mode .summary-divider { border-color: #374151; }
+
+.summary-row.total { 
+    font-weight: 700; 
+    font-size: 1.25rem; 
+}
+
+.summary-row.discount { 
+    color: var(--color-primary); 
+    font-size: 0.9rem; 
+}
+.dark-mode .summary-row.discount { color: #6ee7b7; }
+
+.checkout-btn { 
+    width: 100%; 
+    text-align: center; 
+    margin-top: 1.5rem; 
+    border-radius: 8px; 
+}
+
+/* Voucher Section */
+.voucher-section { margin-top: 1.5rem; }
+
+#voucherForm { 
+    display: flex; 
+    gap: 0.5rem; 
+}
+
+.voucher-input { 
+    flex-grow: 1; 
+    padding: 0.75rem; 
+    border: 1px solid #d1d5db; 
+    border-radius: 8px; 
+}
+.dark-mode .voucher-input { 
+    background-color: #374151; 
+    border-color: #4b5563; 
+    color: #f9fafb; 
+}
+
+.voucher-btn { 
+    padding: 0.75rem 1rem; 
+    border-radius: 8px; 
+    background-color: #e5e7eb; 
+    border: none; 
+    cursor: pointer; 
+    font-weight: 500; 
+}
+.dark-mode .voucher-btn { 
+    background-color: #4b5563; 
+    color: #f9fafb; 
+}
+
+
+/* =============================== */
+/*   2.5. CART COUNTER STYLES      */
+/* =============================== */
+
+/* This is the parent link for the icon */
+.nav-action-button.cart-icon-wrapper {
+    position: relative; /* This is crucial for positioning the child */
+}
+
+/* This is the style for the red circle itself */
+.cart-counter {
+    /* --- POSITIONING FIX --- */
+    position: absolute;
+    top: -5px;      /* Move it up */
+    right: -5px;    /* Move it to the right */
+    
+    /* --- CENTERING FIX --- */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* --- STYLING --- */
+    background-color: #ef4444; /* Bright Red */
+    color: white;
+    border-radius: 50%; /* Makes it a perfect circle */
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    
+    /* Hide it by default */
+    display: none;
+}
+
+/* This rule shows the counter only when it's active */
+.cart-counter.is-active {
+    display: flex;
+}

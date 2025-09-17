@@ -1,0 +1,21 @@
+<!-- templates/components/_cart_items.html -->
+{% if books_in_cart %}
+    {% for book in books_in_cart %}
+    <div class="cart-item">
+        <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" class="cart-item-image">
+        <div class="cart-item-info">
+            <p class="item-title">{{ book.title }}</p>
+            <p class="item-price">Rs. {{ book.price|floatformat:0 }}</p>
+        </div>
+        <div class="cart-item-actions">
+            <form class="remove-from-cart-form" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="book_id" value="{{ book.id }}">
+                <button type="submit" class="remove-btn" title="Remove item">&times;</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="empty-cart-message">Your cart is currently empty.</div>
+{% endif %}

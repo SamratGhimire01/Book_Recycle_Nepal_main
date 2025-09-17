@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Register | BookRecycle Nepal{% endblock %}
+
+{% block content %}
+<main class="auth-page-container">
+  <div class="auth-card">
+    <h2 class="auth-card-header">Create Your Account</h2>
+    
+    <form method="post" class="auth-form">
+        {% csrf_token %}
+        
+        <!-- Individual field rendering for better styling -->
+        <div class="form-group">
+            <label for="id_username">Username</label>
+            {{ form.username }}
+        </div>
+        <div class="form-group">
+            <label for="id_email">Email</label>
+            {{ form.email }}
+        </div>
+        <div class="form-group">
+            <label for="id_password1">Password</label>
+            {{ form.password1 }}
+        </div>
+        <div class="form-group">
+            <label for="id_password2">Password confirmation</label>
+            {{ form.password2 }}
+        </div>
+
+        <!-- Displays any validation errors -->
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div class="auth-error-message">{{ error }}</div>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+
+        <button type="submit" class="auth-submit-btn">Register</button>
+    </form>
+    
+    <div class="auth-redirect-link">
+        <p>
+            Already have an account? 
+            <a href="{% url 'login' %}">Login here</a>
+        </p>
+    </div>
+  </div>
+</main>
+
+<!-- This custom style is needed to format Django's form inputs correctly -->
+<style>
+    #id_username, #id_email, #id_password1, #id_password2 {
+        width: 100%; padding: 0.875rem 1rem; background-color: #374151;
+        border: 1px solid #4b5563; border-radius: 8px; color: #e5e7eb;
+        font-size: 1rem; transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    #id_username:focus, #id_email:focus, #id_password1:focus, #id_password2:focus {
+        outline: none; border-color: #6ee7b7;
+        box-shadow: 0 0 0 3px rgba(110, 231, 183, 0.3);
+    }
+</style>
+{% endblock %}

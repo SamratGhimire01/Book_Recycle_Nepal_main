@@ -1,59 +1,163 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
+    <script>
+        // Instant Dark Mode Loader
+        if (localStorage.getItem('darkMode') === 'enabled' || localStorage.getItem('darkMode') === null) {
+            document.documentElement.classList.add('dark-mode-active'); // Use a different class to avoid conflicts
+        }
+    </script>
+    
     <title>{% block title %}BookRecycle Nepal{% endblock %}</title>
+    <meta name="description" content="BookRecycle Nepal - Buy and sell second-hand books in Nepal.">
     
-    <meta name="description" content="The trusted marketplace for buying and selling used textbooks in Nepal.">
+    <!-- Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    
-    <!-- This links to our CSS file -->
+    <!-- Our Custom Stylesheets -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_head %}{% endblock %}
 </head>
-<body>
+<body class="{% if theme == 'dark' %}dark-mode{% endif %}">
 
-    <header class="main-header">
+    <!-- ======================= -->
+    <!--     REUSABLE NAVBAR     -->
+    <!-- ======================= -->
+    <nav class="main-nav sticky">
         <div class="container">
-            <a href="#" class="logo">BookRecycle Nepal</a>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Categories</a></li>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-            </nav>
-            <div class="header-actions">
-                <a href="#">My Profile</a>
-                <a href="#" class="button button-secondary">Sell Your Book</a>
+            <a href="{% url 'home' %}" class="nav-logo">
+                <img src="{% static 'images/logo.png' %}" alt="BookRecycle Nepal Logo" class="logo-image">
+            </a>
+            <div class="nav-links">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'all_categories' %}">Categories</a>
+                <a href="{% url 'listed_books' %}">Listed Books</a>
+                <a href="{% url 'sell_book' %}">Sell Book</a>
             </div>
+            <div class="nav-actions">
+                <button id="darkModeToggle" class="nav-action-button"><i class="fas fa-moon"></i></button>
+                <a href="{% url 'view_cart' %}" id="cartIcon" class="nav-action-button cart-icon-wrapper">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-counter" class="cart-counter {% if request.session.cart %}is-active{% endif %}">{{ request.session.cart|length }}</span>
+                </a>
+                <div class="profile-dropdown">
+                    <button class="nav-action-button"><i class="fas fa-user"></i></button>
+                    <div class="dropdown-menu">
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'profile_view' user.username %}">My Profile</a>
+                            <a href="{% url 'my_listings' %}">My Listings</a>
+                            <a href="#">My Orders</a>
+                            <a href="{% url 'logout' %}">Logout</a>
+                        {% else %}
+                            <a href="{% url 'login' %}">Login</a>
+                            <a href="{% url 'register' %}">Register</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <button id="mobileMenuBtn" class="mobile-menu-button"><i class="fas fa-bars"></i></button>
         </div>
-    </header>
+    </nav>
 
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu hidden">
+        <!-- ... (Your mobile menu links) ... -->
+    </div>
+
+    <!-- ======================= -->
+    <!--   MAIN CONTENT BLOCK    -->
+    <!-- ======================= -->
     <main>
-        <!-- The content from index.html will be placed here -->
-        {% block content %}
-        {% endblock %}
+        {% block content %}{% endblock %}
     </main>
 
+    <!-- ====================================================== -->
+    <!-- == START: RESTORED FOOTER                           == -->
+    <!-- ====================================================== -->
     <footer class="main-footer">
         <div class="container">
             <div class="footer-grid">
-                <div class="footer-column"><h4>BookRecycle Nepal</h4><p>Our mission is to make education affordable and sustainable in Nepal.</p></div>
-                <div class="footer-column"><h4>Quick Links</h4><ul><li><a href="#">Home</a></li><li><a href="#">About Us</a></li><li><a href="#">Contact</a></li><li><a href="#">FAQ</a></li></ul></div>
-                <div class="footer-column"><h4>Legal</h4><ul><li><a href="#">Terms of Service</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
-                <div class="footer-column"><h4>Contact Us</h4><p>Kathmandu, Nepal<br>contact@bookrecycle.np</p></div>
+                <div>
+                    <h3>BookRecycle Nepal</h3>
+                    <p>Nepal's trusted marketplace for buying and selling second-hand books.</p>
+                </div>
+                <div>
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="{% url 'home' %}">Home</a></li>
+                        <li><a href="{% url 'listed_books' %}">Browse Books</a></li>
+                        <li><a href="{% url 'sell_book' %}">Sell Books</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Categories</h4>
+                    <ul>
+                        <li><a href="#">+2 Science</a></li>
+                        <li><a href="#">Bachelor's Degree</a></li>
+                        <li><a href="#">Master's Degree</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Help & Support</h4>
+                    <ul>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Return Policy</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                    </ul>
+                </div>
             </div>
-            <div class="footer-bottom"><p>&copy; 2025 BookRecycle Nepal. All rights reserved.</p></div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 BookRecycle Nepal. All rights reserved.</p>
+            </div>
         </div>
     </footer>
+    <button id="backToTop" class="back-to-top"><i class="fas fa-arrow-up"></i></button>
+    <!-- ====================================================== -->
+    <!-- == END: RESTORED FOOTER                             == -->
+    <!-- ====================================================== -->
 
+    <!-- ====================================================== -->
+    <!-- == START: RESTORED CART SLIDE-OUT PANEL             == -->
+    <!-- ====================================================== -->
+    <div id="cartOverlay" class="cart-overlay"></div>
+    <div id="cartPanel" class="cart-panel">
+        <div class="cart-header">
+            <h3>Your Shopping Cart</h3>
+            <button id="closeCartBtn" class="close-cart-btn">&times;</button>
+        </div>
+        <div id="cartBody" class="cart-body">
+            <div class="loading-spinner"></div>
+        </div>
+        <div class="cart-footer">
+            <div class="subtotal">
+                <span>Subtotal</span>
+                <span id="cartSubtotal">Rs. 0.00</span>
+            </div>
+            <a href="{% url 'view_cart' %}" class="button button-primary checkout-btn">View Cart & Checkout</a>
+        </div>
+    </div>
+    <!-- ====================================================== -->
+    <!-- == END: RESTORED CART SLIDE-OUT PANEL               == -->
+    <!-- ====================================================== -->
+    
+    <!-- ====================================================== -->
+    <!-- == SCRIPT TAG (Correct and Final)                   == -->
+    <!-- ====================================================== -->
+    <script id="main-js" 
+            src="{% static 'js/main.js' %}"
+            data-toggle-favorite-url="{% url 'toggle_favorite' %}"
+            data-live-search-url="{% url 'live_search_books' %}"
+            data-update-theme-url="{% url 'update_theme' %}"
+            data-add-to-cart-url="{% url 'add_to_cart' %}"
+            data-remove-from-cart-url="{% url 'remove_from_cart' %}"
+            
+            data-toggle-follow-url="{% url 'toggle_follow' %}">
+    </script>
+  
 </body>
 </html>

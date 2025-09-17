@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Review Your Purchase | BookRecycle Nepal{% endblock %}
+
+{% block content %}
+<main class="auth-page-container">
+    <div class="auth-card">
+        <h1 class="auth-card-header">Leave a Review for "{{ book.title }}"</h1>
+        <p style="text-align: center; margin-bottom: 1.5rem; color: #9ca3af;">Your feedback helps other buyers and sellers.</p>
+        
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                {{ form.rating.label_tag }}
+                {{ form.rating }}
+            </div>
+            <div class="form-group">
+                {{ form.comment.label_tag }}
+                {{ form.comment }}
+            </div>
+
+            <button type="submit" class="auth-submit-btn">Submit Review</button>
+        </form>
+    </div>
+</main>
+
+<!-- Add some custom styles to make the form look good -->
+<style>
+    #id_rating, #id_comment {
+        width: 100%; padding: 0.75rem; border: 1px solid #4b5563;
+        border-radius: 8px; background-color: #374151; color: #e5e7eb;
+    }
+</style>
+{% endblock %}

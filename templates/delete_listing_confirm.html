@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirm Deletion | BookRecycle Nepal{% endblock %}
+
+{% block content %}
+<main class="container" style="padding-top: 2rem; padding-bottom: 4rem; max-width: 600px;">
+    <div class="auth-card">
+        <h1 class="auth-card-header">Are you sure?</h1>
+        <p style="text-align: center; margin-bottom: 1.5rem;">
+            You are about to permanently delete the listing for: <strong>"{{ book.title }}"</strong>.
+        </p>
+        <p style="text-align: center; margin-bottom: 2rem;">This action cannot be undone.</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <a href="{% url 'my_listings' %}" class="button btn-secondary-form">Cancel</a>
+                <button type="submit" class="button button-primary" style="background-color: #ef4444;">Yes, Delete</button>
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Listing: {{ book.title }} | BookRecycle Nepal{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/sell-form.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="sell-page-container">
+    <div class="form-preview-wrapper">
+        <div class="sell-form-card">
+            <div class="sell-form-header">
+                <h2>Edit Your Book Listing</h2>
+                <p>Update the details for "{{ book.title }}"</p>
+            </div>
+            
+            <form id="bookForm" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- ============================================= -->
+                <!-- == START: NEW "EXISTING IMAGES" SECTION    == -->
+                <!-- ============================================= -->
+                <div class="existing-images-section">
+                    <label class="form-label">Manage Existing Images</label>
+                    {% if book.images.all %}
+                        <div class="existing-images-grid">
+                            {% for image in book.images.all %}
+                                <div class="existing-image-card">
+                                    <img src="{{ image.image.url }}" alt="Existing book image">
+                                    <!-- This link will go to a "delete image" view we can build next -->
+                                    <a href="#" class="delete-image-btn" title="Delete Image">&times;</a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>No images have been uploaded for this book yet.</p>
+                    {% endif %}
+                </div>
+                <!-- ============================================= -->
+                <!-- == END: NEW "EXISTING IMAGES" SECTION      == -->
+                <!-- ============================================= -->
+
+
+                <!-- Image Upload Section for adding NEW images -->
+                <div>
+                    <label class="form-label">Upload New Images (Optional)</label>
+                    <div id="dropZone" class="drop-zone">
+                        <div id="uploadContent">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                            <p>Drag & drop, or click to browse</p>
+                        </div>
+                    </div>
+                    <div id="imagePreviewsContainer" class="image-previews"></div>
+                    <input type="file" name="images" multiple accept="image/*" id="actual-file-input" style="display: none;">
+                </div>
+
+                <!-- Main Details Grid (unchanged) -->
+                <div class="form-grid">
+                    <div class="form-group">{{ form.title.label_tag }}{{ form.title }}</div>
+                    <div class="form-group">{{ form.category.label_tag }}{{ form.category }}</div>
+                    <div class="form-group">{{ form.course.label_tag }}{{ form.course }}</div>
+                    <div class="form-group">{{ form.condition.label_tag }}{{ form.condition }}</div>
+                    <div class="form-group">{{ form.price.label_tag }}<div class="price-input-wrapper">{{ form.price }}</div></div>
+                    <div class="form-group">{{ form.original_price.label_tag }}<div class="price-input-wrapper">{{ form.original_price }}</div></div>
+                </div>
+
+                <!-- Description (unchanged) -->
+                <div class="form-group">
+                    {{ form.description.label_tag }}
+                    {{ form.description }}
+                </div>
+
+                <div class="form-actions">
+                    <a href="{% url 'my_listings' %}" class="button btn-secondary-form">Cancel</a>
+                    <button type="submit" class="button button-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+        <!-- (Optional preview card can go here) -->
+    </div>
+</main>
+<script src="{% static 'js/sell-form.js' %}"></script>
+{% endblock %}

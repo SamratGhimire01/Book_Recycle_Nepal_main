@@ -1,0 +1,63 @@
+<!-- templates/components/_book_card.html -->
+{% load static %}
+
+
+
+{% load static %}
+<div class="bc-card">
+    <div class="bc-card-top">
+        <div class="bc-top-left-badge">{{ book.condition }}</div>
+        <form class="toggle-favorite-form" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="book_id" value="{{ book.id }}">
+            <button type="submit" class="bc-heart-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </button>
+        </form>
+        <a href="{% url 'book_detail' book.id %}" class="bc-image-container">
+            {% if book.cover_image %}
+                <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" class="bc-book-image">
+            {% else %}
+                <img src="{% static 'images/placeholder.png' %}" alt="No image" class="bc-book-image">
+            {% endif %}
+        </a>
+    </div>
+    <div class="bc-card-bottom">
+        <div>
+            <h2 class="bc-title">{{ book.title }}</h2>
+            <div class="bc-price-section">
+                {% if book.original_price %}
+                    <span class="bc-original-price">Rs.{{ book.original_price|floatformat:0 }}</span>
+                {% endif %}
+                <span class="bc-price-tag">Now at Rs.{{ book.price|floatformat:0 }}</span>
+            </div>
+            <div class="bc-details">
+                <div class="bc-detail-row">
+                    <span class="bc-detail-label">Category</span>
+                    <span class="bc-detail-value">{{ book.category.name|default:"N/A" }}</span>
+                </div>
+                <div class="bc-detail-row">
+                    <span class="bc-detail-label">Course</span>
+                    <span class="bc-detail-value">{{ book.course.name|default:"N/A" }}</span>
+                </div>
+                <div class="bc-seller-info">
+                    <a href="{% url 'profile_view' book.seller.username %}" class="bc-seller-link">
+                        <span class="bc-seller-name">{{ book.seller.username }}</span>
+                    </a>
+                    <span class="bc-time-ago">{{ book.created_at|timesince }} ago</span>
+                </div>
+            </div>
+        </div>
+        <div class="bc-buttons-container">
+    <!-- View Details is a simple link -->
+    <a href="{% url 'book_detail' book.id %}" class="bc-btn">View Details</a>
+    
+    <!-- Add to Cart is a form that contains the button -->
+    <form class="add-to-cart-form" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="book_id" value="{{ book.id }}">
+        <button type="submit" class="bc-add-to-cart-btn">Add to Cart</button>
+    </form>
+</div>
+    </div>
+</div>

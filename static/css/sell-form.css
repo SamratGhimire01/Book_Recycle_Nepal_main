@@ -1,0 +1,163 @@
+/* =============================== */
+/*  MODERN SELL BOOK FORM STYLES   */
+/* =============================== */
+
+/* --- Main Page Container --- */
+.sell-page-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 0 1rem;
+}
+
+/* --- Wrapper for Form and Preview --- */
+.form-preview-wrapper {
+    display: grid;
+    grid-template-columns: 1fr; 
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+/* On large screens, create the two-column layout */
+@media (min-width: 1024px) {
+    .form-preview-wrapper {
+        grid-template-columns: 1.5fr 1fr;
+    }
+}
+
+/* --- Main Form Card --- */
+.sell-form-card {
+    background-color: var(--color-bg-white);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+.dark-mode .sell-form-card { background-color: var(--color-dark-card); }
+
+.sell-form-header { padding: 1.5rem; }
+.sell-form-header h2 { font-size: 1.5rem; font-weight: 700; color: var(--color-primary); }
+.dark-mode .sell-form-header h2 { color: var(--color-accent); }
+.sell-form-header p { color: #6b7280; margin-top: 0.25rem; }
+.dark-mode .sell-form-header p { color: #9ca3af; }
+
+#bookForm { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
+
+/* --- General Form Inputs --- */
+.form-label { display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem; }
+.dark-mode .form-label { color: #d1d5db; }
+
+.form-input, .form-select, .form-textarea {
+    display: block; width: 100%; padding: 0.75rem; border: 1px solid #d1d5db;
+    border-radius: 8px; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); transition: all 0.3s;
+}
+.dark-mode .form-input, .dark-mode .form-select, .dark-mode .form-textarea { background-color: #374151; border-color: #4b5563; color: #f9fafb; }
+.form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--color-primary-brand); box-shadow: 0 0 0 3px rgba(4, 108, 78, 0.2); }
+.form-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+@media (min-width: 768px) { .form-grid { grid-template-columns: repeat(2, 1fr); } }
+.price-input-wrapper { position: relative; }
+.price-input-wrapper .form-input { padding-left: 2.5rem; }
+.price-prefix { position: absolute; top: 0; bottom: 0; left: 0; padding-left: 0.75rem; display: flex; align-items: center; pointer-events: none; color: #6b7280; }
+
+/* --- Image Drop Zone --- */
+.drop-zone { border: 2px dashed #d1d5db; border-radius: 8px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.3s ease; }
+.dark-mode .drop-zone { border-color: #4b5563; }
+.drop-zone:hover, .drop-zone.drop-zone--over { border-color: var(--color-primary-brand); background-color: rgba(64, 145, 108, 0.05); }
+.drop-zone svg { margin: 0 auto; width: 3rem; height: 3rem; color: #9ca3af; }
+.drop-zone p { color: #6b7280; }
+.image-previews { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 1rem; margin-top: 1rem; }
+.image-preview { position: relative; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); aspect-ratio: 1 / 1; }
+.image-preview img { width: 100%; height: 100%; object-fit: cover; }
+.remove-image { position: absolute; top: 0.25rem; right: 0.25rem; background: rgba(0,0,0,0.6); border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; color: white; font-size: 1.2rem; line-height: 1; transition: all 0.2s; }
+.remove-image:hover { background: #ef4444; }
+
+/* --- Live Preview Card --- */
+.preview-sticky-container {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 100px;
+}
+.preview-card {
+    background-color: var(--color-bg-white);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    padding: 1.5rem;
+}
+.dark-mode .preview-card { background-color: var(--color-dark-card); }
+.preview-card.hidden { display: none; }
+.preview-header { font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; border-bottom: 1px solid #eee; padding-bottom: 1rem; color: var(--color-primary); }
+.dark-mode .preview-header { border-color: #374151; color: var(--color-accent); }
+.preview-content { display: flex; gap: 1rem; }
+.preview-image { width: 100px; height: 140px; object-fit: cover; border-radius: 8px; flex-shrink: 0; background-color: #f3f4f6; }
+.dark-mode .preview-image { background-color: #374151; }
+.preview-info h4 { font-weight: 600; font-size: 1.125rem; margin-bottom: 0.25rem; }
+.preview-info p { font-size: 0.875rem; color: #6b7280; margin-bottom: 0.5rem; }
+.dark-mode .preview-info p { color: #9ca3af; }
+.preview-price { font-weight: 700; font-size: 1.25rem; color: var(--color-primary); }
+.dark-mode .preview-price { color: var(--color-accent); }
+
+/* --- Form Actions --- */
+.form-actions { display: flex; justify-content: flex-end; gap: 0.75rem; padding-top: 1rem; }
+.form-actions .button { padding: 0.6rem 1rem; font-size: 0.875rem; font-weight: 500; border-radius: 8px; }
+.btn-secondary-form { background-color: #e5e7eb; color: #374151; }
+.dark-mode .btn-secondary-form { background-color: #4b5563; color: #d1d5db; }
+
+/* =============================== */
+/*  EDIT PAGE - IMAGE MANAGEMENT   */
+/* =============================== */
+
+.existing-images-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #eee;
+}
+
+.dark-mode .existing-images-section {
+    border-color: #374151;
+}
+
+/* --- THIS IS THE CRITICAL FIX --- */
+.existing-images-grid {
+    display: grid;
+    /* Create a responsive grid for the image thumbnails */
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+}
+
+.existing-image-card {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    overflow: hidden; /* This is important to contain the image */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.existing-image-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image fills the card without stretching */
+}
+
+.delete-image-btn {
+    position: absolute;
+    top: 0.25rem; /* 4px */
+    right: 0.25rem; /* 4px */
+    background: rgba(239, 68, 68, 0.9); /* Semi-transparent Red */
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 2px solid white;
+    font-size: 1.1rem;
+    line-height: 1;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.delete-image-btn:hover {
+    background: #dc2626; /* Darker Red */
+    transform: scale(1.1);
+}

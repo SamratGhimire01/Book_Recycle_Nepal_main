@@ -53,17 +53,20 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'bookrecycle_nepal.urls'
 
+# bookrecycle_nepal/settings.py
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')], # This correctly tells Django where to find your base.html
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'django.template.context_processors.debug', # It's good practice to have this one too
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'main.context_processors.theme_processor',
             ],
         },
     },
@@ -128,3 +131,10 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# The base URL from which media files will be served
+MEDIA_URL = '/media/'
+
+# The absolute path to the folder where user-uploaded files will be stored
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+LOGIN_URL = 'login' 
+LOGIN_REDIRECT_URL = 'home'

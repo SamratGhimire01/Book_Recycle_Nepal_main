@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Listings Dashboard | BookRecycle Nepal{% endblock %}
+
+{% block extra_head %}
+    <!-- Link to a new dedicated stylesheet for this page -->
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="container dashboard-container">
+    <h1 class="dashboard-header">My Listings Dashboard</h1>
+
+    <!-- Stats Cards Section -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h4>Total Books Listed</h4>
+            <p>{{ total_listings }}</p>
+        </div>
+        <div class="stat-card">
+            <h4>Books Available</h4>
+            <p>{{ available_count }}</p>
+        </div>
+        <div class="stat-card">
+            <h4>Books Sold</h4>
+            <p>{{ sold_count }}</p>
+        </div>
+        <div class="stat-card">
+            <h4>Pending Approval</h4>
+            <p>{{ pending_count }}</p>
+        </div>
+    </div>
+
+    <!-- Revenue Section -->
+    <div class="revenue-grid">
+        <div class="revenue-card">
+            <h4>Total Earnings from Sold Books</h4>
+            <p>Rs. {{ total_revenue_from_sold|floatformat:2 }}</p>
+        </div>
+        <div class="revenue-card">
+            <h4>Potential Revenue from Available Books</h4>
+            <p>Rs. {{ potential_revenue_from_available|floatformat:2 }}</p>
+        </div>
+    </div>
+
+    <!-- Detailed Book List Section -->
+    <div class="book-list-section">
+        <h2 class="section-heading">All My Listed Books</h2>
+        <div class="book-table-wrapper">
+            <table class="book-table">
+                <thead>
+                    <tr>
+                        <th>Book Title</th>
+                        <th>Status</th>
+                        <th>Price</th>
+                        <th>Listed On</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in all_my_books %}
+                        <tr>
+                            <td>
+                                <div class="book-title-cell">
+                                    <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+                                    <span>{{ book.title }}</span>
+                                </div>
+                            </td>
+                            <td><span class="status-tag status-{{ book.status|lower }}">{{ book.status }}</span>
+                            {% if book.status == 'Rejected' and book.rejection_reason %}
+                    <p class="rejection-reason">Reason: {{ book.rejection_reason }}</p>
+                {% endif %}
+                            </td>
+                            <td>Rs. {{ book.price|floatformat:0 }}</td>
+                            <td>{{ book.created_at|date:"M d, Y" }}</td>
+                            <td>
+                                <!-- Links to edit/delete pages (we will build these next) -->
+                                <a href="{% url 'edit_listing' book.id %}" class="action-btn edit-btn">Edit</a>
+                                <a href="{% url 'delete_listing' book.id %}" class="action-btn delete-btn">Delete</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5">You have not listed any books yet. <a href="{% url 'sell_book' %}">Sell your first book!</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+{% endblock %}
