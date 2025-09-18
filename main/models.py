@@ -104,6 +104,10 @@ class Profile(models.Model):
     bio = models.TextField(blank=True, null=True)
     location = models.CharField(max_length=100, blank=True, null=True)
     is_verified = models.BooleanField(default=False)
+    full_name = models.CharField(max_length=100, blank=True, null=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+    address_line_1 = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
     
     # --- ADD THIS NEW FIELD ---
     theme = models.CharField(max_length=10, choices=THEME_CHOICES, default='light')
@@ -151,3 +155,33 @@ class Follow(models.Model):
 # =========================================================
 # == END: NEW USER PROFILE & INTERACTION MODELS          ==
 # =========================================================
+
+# First, create an Order model if you haven't already
+class Order(models.Model):
+    PAYMENT_CHOICES = [
+        ('COD', 'Cash on Delivery'),
+        ('ESEWA', 'eSewa'),
+        ('KHALTI', 'Khalti'),
+    ]
+    
+    buyer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='orders')
+    shipping_address = models.TextField()
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    # --- ADD THIS FIELD ---
+    payment_method = models.CharField(max_length=10, choices=PAYMENT_CHOICES, default='COD')
+    
+    status = models.CharField(max_length=50, default='Processing')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Order {self.id} by {self.buyer.username}"
+
+# Also, create an OrderItem model if you haven't
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=10, decimal_places=2) # Price at the time of purchase
+
+    def __str__(self):
+        return f'{self.book.title} in Order {self.order.id}'

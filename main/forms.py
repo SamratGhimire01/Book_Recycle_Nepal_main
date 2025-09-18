@@ -73,3 +73,26 @@ class ReviewForm(forms.ModelForm):
             'rating': forms.Select(choices=[(i, f'{i} Stars') for i in range(1, 6)]),
             'comment': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Share your experience...'}),
         }
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        
+        # --- THIS IS THE FIX: Add the new address fields to this list ---
+        fields = [
+            'profile_picture', 'bio', 'location',
+            'full_name', 'phone_number', 'address_line_1', 'city'
+        ]
+        
+        # We should also add labels for them
+        labels = {
+            'profile_picture': 'Change Profile Picture',
+            'bio': 'About Me',
+            'location': 'Public Location (City)',
+            'full_name': 'Full Name (for delivery)',
+            'phone_number': 'Contact Number',
+            'address_line_1': 'Street Address / Tole',
+            'city': 'City / District (for delivery)',
+        }
+        widgets = {
+            'bio': forms.Textarea(attrs={'rows': 4}),
+        }

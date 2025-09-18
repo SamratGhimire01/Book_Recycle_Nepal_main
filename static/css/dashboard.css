@@ -38,3 +38,129 @@
     margin-top: 0.25rem;
     font-style: italic;
 }
+
+.order-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.order-card {
+    background-color: var(--color-bg-white);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    overflow: hidden; /* Ensures the border-radius is respected */
+}
+.dark-mode .order-card {
+    background-color: var(--color-dark-card);
+}
+
+.order-card-header {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    background-color: #f9fafb;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #eee;
+}
+@media (min-width: 768px) {
+    .order-card-header {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+.dark-mode .order-card-header {
+    background-color: #374151;
+    border-color: #4b5563;
+}
+
+.order-meta {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+}
+.dark-mode .order-meta {
+    color: #9ca3af;
+}
+.order-value {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.order-card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.order-status {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.order-item {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+.order-item:not(:last-child) {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+}
+.dark-mode .order-item:not(:last-child) {
+    border-color: #374151;
+}
+
+.order-item-image {
+    width: 75px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.order-item-info {
+    flex-grow: 1;
+}
+.order-item-info .item-title {
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--color-text-dark);
+}
+.dark-mode .order-item-info .item-title {
+    color: var(--color-text-light);
+}
+.order-item-info .item-seller {
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+.dark-mode .order-item-info .item-seller {
+    color: #9ca3af;
+}
+
+.review-btn {
+    margin-top: 0.75rem;
+    padding: 0.4rem 0.8rem !important;
+    font-size: 0.8rem !important;
+    border-radius: 6px !important;
+}
+
+/* Empty State Message */
+.empty-message {
+    text-align: center;
+    padding: 3rem;
+    background-color: var(--color-bg-white);
+    border-radius: 12px;
+}
+.dark-mode .empty-message {
+    background-color: var(--color-dark-card);
+}
+.empty-message p {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+}
+.empty-message .button {
+    border-radius: 8px;
+}

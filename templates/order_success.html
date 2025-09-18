@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Order Successful{% endblock %}
+{% block content %}
+<main class="container" style="text-align: center; padding: 4rem 1rem;">
+    <!-- Redirect to the tracking page after 3 seconds -->
+    <meta http-equiv="refresh" content="3;url={% url 'order_tracking' order.id %}">
+    
+    <div class="success-animation">
+        <!-- You can add a CSS checkmark animation here -->
+        <i class="fas fa-check-circle" style="font-size: 5rem; color: var(--color-primary);"></i>
+    </div>
+    <h1 class="section-title">Order Placed Successfully!</h1>
+    <p>Your order #{{ order.id }} has been received.</p>
+    <p>You will be redirected to the tracking page shortly...</p>
+</main>
+{% endblock %}

@@ -1,42 +1,125 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Edit Profile | BookRecycle Nepal{% endblock %}
 
+{% block extra_head %}
+    <!-- Link to the dedicated stylesheet for this page -->
+    <link rel="stylesheet" href="{% static 'css/edit-profile.css' %}">
+{% endblock %}
+
 {% block content %}
-<main class="auth-page-container">
-    <div class="auth-card" style="max-width: 600px;">
-        <h1 class="auth-card-header">Edit Your Profile</h1>
+<main class="container">
+    <h1 class="section-title" style="margin-top: 2rem;">Edit Your Profile</h1>
+    
+    <form method="post" enctype="multipart/form-data" class="edit-profile-container">
+        {% csrf_token %}
+        
+        <!-- ============================================= -->
+        <!-- == Column 1: Public Profile                == -->
+        <!-- ============================================= -->
+        <div class="form-section-card">
+            <div class="form-section-header">
+                <h2>Public Profile</h2>
+            </div>
+            <div class="form-section-body">
+                
+                <!-- ============================================= -->
+                <!-- == START: NEW CUSTOM FILE UPLOAD WIDGET    == -->
+                <!-- ============================================= -->
+                <div class="form-group">
+    <label>Profile Picture</label>
+    
+    <!-- This is our preview spot -->
+    <img src="{{ form.instance.profile_picture.url|default:'/static/images/default_avatar.png' }}" 
+         alt="Current profile picture" 
+         class="profile-picture-preview" 
+         id="profilePicturePreview">
 
-        <form method="post" enctype="multipart/form-data" class="auth-form">
-            {% csrf_token %}
-            
-            <div class="form-group">
-                {{ form.profile_picture.label_tag }}
-                {{ form.profile_picture }}
-            </div>
-            <div class="form-group">
-                {{ form.bio.label_tag }}
-                {{ form.bio }}
-            </div>
-            <div class="form-group">
-                {{ form.location.label_tag }}
-                {{ form.location }}
-            </div>
+    <!-- This is our custom button -->
+    <label for="id_profile_picture" class="custom-file-upload">
+        <i class="fas fa-upload"></i> Upload New Image
+    </label>
+    
+    <!-- This span shows the selected file name -->
+    <span id="fileName" class="file-name-display"></span>
+    
+    <!-- 
+        ==================================================
+        == THIS IS THE ONLY LINE THAT WAS CHANGED       ==
+        ==================================================
+    -->
+    <input type="file" name="profile_picture" accept="image/*" id="id_profile_picture" style="display: none;">
+</div>
+                <!-- ============================================= -->
+                <!-- == END: NEW CUSTOM FILE UPLOAD WIDGET      == -->
+                <!-- ============================================= -->
 
-            <button type="submit" class="auth-submit-btn">Save Changes</button>
-        </form>
-    </div>
+                <div class="form-group">
+                    {{ form.bio.label_tag }}
+                    {{ form.bio }}
+                </div>
+                <div class="form-group">
+                    {{ form.location.label_tag }}
+                    {{ form.location }}
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================= -->
+        <!-- == Column 2: Private Delivery Information  == -->
+        <!-- ============================================= -->
+        <div class="form-section-card">
+            <div class="form-section-header">
+                <h2>Private Delivery Information</h2>
+            </div>
+            <div class="form-section-body">
+                 <p style="font-size: 0.8rem; color: #6b7280; margin-top: -1rem;">This is only for order fulfillment and is not visible to other users.</p>
+                <div class="form-group">
+                    {{ form.full_name.label_tag }}
+                    {{ form.full_name }}
+                </div>
+                <div class="form-group">
+                    {{ form.phone_number.label_tag }}
+                    {{ form.phone_number }}
+                </div>
+                <div class="form-group">
+                    {{ form.address_line_1.label_tag }}
+                    {{ form.address_line_1 }}
+                </div>
+                <div class="form-group">
+                    {{ form.city.label_tag }}
+                    {{ form.city }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button (spans both columns) -->
+        <div class="submit-container">
+             <button type="submit" class="save-changes-btn">Save Changes</button>
+        </div>
+    </form>
 </main>
 
-<!-- Add some custom styles to make the form look good -->
+<!-- This style block ensures all our form fields get the correct styling -->
 <style>
-    #id_bio {
-        width: 100%; padding: 0.75rem; border: 1px solid #4b5563;
-        border-radius: 8px; background-color: #374151; color: #e5e7eb;
+    #id_bio, #id_location, #id_full_name, #id_phone_number, #id_address_line_1, #id_city {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background-color: #f9fafb;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        color: var(--color-text-dark);
+        font-size: 1rem;
+        transition: all 0.3s ease;
     }
-    #id_location {
-        width: 100%; padding: 0.875rem 1rem; background-color: #374151;
-        border: 1px solid #4b5563; border-radius: 8px; color: #e5e7eb;
+    #id_bio { min-height: 120px; }
+    .dark-mode #id_bio, .dark-mode #id_location, .dark-mode #id_full_name, .dark-mode #id_phone_number, .dark-mode #id_address_line_1, .dark-mode #id_city {
+        background-color: #374151; border-color: #4b5563; color: #e5e7eb;
+    }
+    #id_bio:focus, #id_location:focus, #id_full_name:focus, #id_phone_number:focus, #id_address_line_1:focus, #id_city:focus {
+        outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(4, 108, 78, 0.2);
     }
 </style>
+
 {% endblock %}

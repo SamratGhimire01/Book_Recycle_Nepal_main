@@ -13,62 +13,69 @@
     <h1 class="section-title">Your Shopping Cart</h1>
 
     <div class="cart-layout">
-        <!-- Left Side: Cart Items with Checkboxes -->
-        <div class="cart-items-list">
-            {% for book in books_in_cart %}
-            <div class="cart-item">
-                
-                <!-- ============================================= -->
-                <!-- == START: NEW WRAPPER FOR CHECKBOX & IMAGE == -->
-                <!-- ============================================= -->
-                <div class="item-visuals">
-                    <input type="checkbox" class="item-checkbox" data-price="{{ book.price }}" checked>
-                    <a href="{% url 'book_detail' book.id %}" class="cart-item-image-link">
-                        <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" class="cart-item-image">
-                    </a>
-                </div>
-                <!-- ============================================= -->
-                <!-- == END: NEW WRAPPER                        == -->
-                <!-- ============================================= -->
+        <!-- We need a form tag for the CSRF token for the 'update selection' feature -->
+        <form id="cartForm">
+            {% csrf_token %}
+            <div class="cart-items-list">
+                {% for book in books_in_cart %}
+                <div class="cart-item">
+                    <div class="item-visuals">
+                        <!-- 
+                            =================================================
+                            == THIS IS THE FIX for remembering selections ==
+                            =================================================
+                            The 'checked' attribute is now only added if the book's ID
+                            is in our 'selected_book_ids' list from the view.
+                        -->
+                        <input type="checkbox" class="item-checkbox" 
+                               data-price="{{ book.price }}" 
+                               data-book-id="{{ book.id }}" 
+                               {% if book.id in selected_book_ids %}checked{% endif %}>
+                        
+                        <a href="{% url 'book_detail' book.id %}" class="cart-item-image-link">
+                            <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" class="cart-item-image">
+                        </a>
+                    </div>
 
-                <div class="cart-item-info">
-                    <a href="{% url 'book_detail' book.id %}" class="item-title">{{ book.title }}</a>
-                    <p class="item-seller">Sold by: {{ book.seller.username }}</p>
-                    <p class="item-condition">Condition: {{ book.condition }}</p>
+                    <div class="cart-item-info">
+                        <a href="{% url 'book_detail' book.id %}" class="item-title">{{ book.title }}</a>
+                        <p class="item-seller">Sold by: {{ book.seller.username }}</p>
+                        <p class="item-condition">Condition: {{ book.condition }}</p>
+                    </div>
+                    
+                    <div class="cart-item-price-and-remove">
+                        <p class="item-price">Rs. {{ book.price|floatformat:0 }}</p>
+                        <form class="remove-from-cart-form" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="book_id" value="{{ book.id }}">
+                            <button type="submit" class="remove-link">Remove</button>
+                        </form>
+                    </div>
                 </div>
-                
-                <div class="cart-item-price-and-remove">
-                    <p class="item-price">Rs. {{ book.price|floatformat:0 }}</p>
-                    <form class="remove-from-cart-form" method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="book_id" value="{{ book.id }}">
-                        <button type="submit" class="remove-link">Remove</button>
-                    </form>
-                </div>
+                {% empty %}
+                    <div class="empty-cart-message">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h2>Your cart is empty.</h2>
+                        <a href="{% url 'listed_books' %}" class="button button-primary">Continue Shopping</a>
+                    </div>
+                {% endfor %}
             </div>
-            {% empty %}
-                <div class="empty-cart-message">
-                    <i class="fas fa-shopping-cart"></i>
-                    <h2>Your cart is empty.</h2>
-                    <a href="{% url 'listed_books' %}" class="button button-primary">Continue Shopping</a>
-                </div>
-            {% endfor %}
-        </div>
-
+        </form>
+        
         <!-- Right Side: Order Summary -->
         {% if books_in_cart %}
         <div class="order-summary-sticky-container">
             <div class="order-summary">
                 <h2 class="summary-title">Order Summary</h2>
                 <div class="summary-row">
-                    <span>Subtotal (<span id="itemCount">{{ books_in_cart|length }}</span> items)</span>
-                    <span id="subtotalDisplay">Rs. {{ subtotal|floatformat:2 }}</span>
+                    <span>Subtotal (<span id="itemCount">0</span> items)</span>
+                    <span id="subtotalDisplay">Rs. 0.00</span>
                 </div>
                 <div class="summary-row">
                     <span>Delivery Charge</span>
-                    <span id="deliveryDisplay">Rs. {{ delivery_charge|floatformat:2 }}</span>
+                    <span id="deliveryDisplay">Rs. 100.00</span>
                 </div>
-                
+
                 <!-- Voucher Section -->
                 <div class="voucher-section">
                     <form id="voucherForm" method="GET" action="{% url 'view_cart' %}">
@@ -87,12 +94,21 @@
                 <hr class="summary-divider">
                 <div class="summary-row total">
                     <span>Grand Total</span>
-                    <span id="grandTotalDisplay">Rs. {{ grand_total|floatformat:2 }}</span>
+                    <span id="grandTotalDisplay">Rs. 100.00</span>
                 </div>
-                <a href="#" class="button button-primary checkout-btn">Proceed to Checkout</a>
+                
+                <!-- THIS BUTTON WILL NOW BE FUNCTIONAL -->
+                <button id="checkoutBtn" class="button button-primary checkout-btn">Proceed to Checkout</button>
             </div>
         </div>
         {% endif %}
     </div>
 </main>
+
+<!-- This script tag correctly loads the dedicated JS for this page -->
+<script id="cart-script" 
+        src="{% static 'js/cart.js' %}"
+        data-update-selection-url="{% url 'update_cart_selection' %}"
+        data-checkout-url="{% url 'checkout' %}">
+</script>
 {% endblock %}

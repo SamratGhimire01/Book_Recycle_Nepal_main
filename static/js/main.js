@@ -278,6 +278,58 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+ const realFileInput = document.getElementById('id_profile_picture');
+    const customButtonLabel = document.querySelector('.custom-file-upload');
+    const fileNameDisplay = document.getElementById('fileName');
 
+    if (realFileInput && customButtonLabel && fileNameDisplay) {
+        // When the user clicks our custom button, trigger the real file input
+        customButtonLabel.addEventListener('click', (e) => {
+            // We don't need e.preventDefault() because it's a label
+        });
+
+        // When the user selects a file in the real input, update our display
+        realFileInput.addEventListener('change', () => {
+            if (realFileInput.files.length > 0) {
+                fileNameDisplay.textContent = realFileInput.files[0].name;
+            } else {
+                fileNameDisplay.textContent = '';
+            }
+        });
+    }
     
+
+     // ===================================
+    // == START: LIVE PROFILE PIC PREVIEW ==
+    // ===================================
+    const realProfilePicInput = document.getElementById('id_profile_picture');
+    const profilePicPreview = document.getElementById('profilePicturePreview');
+    
+
+    if (realProfilePicInput && profilePicPreview) {
+        realProfilePicInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                // Use FileReader to read the file and generate a temporary URL
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    // Set the src of our preview image to the new temporary URL
+                    profilePicPreview.src = e.target.result;
+                }
+                
+                reader.readAsDataURL(file);
+
+                // Also update the file name display
+                if (fileNameDisplay) {
+                    fileNameDisplay.textContent = file.name;
+                }
+
+            }
+        });
+    }
+    // ===================================
+    // == END: LIVE PROFILE PIC PREVIEW   ==
+    // ===================================
+
 }); // End DOMContentLoaded

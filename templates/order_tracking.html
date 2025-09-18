@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Track Your Order{% endblock %}
+{% block extra_head %}
+    <!-- You would create a new CSS file for this page -->
+{% endblock %}
+{% block content %}
+<main class="container" style="padding: 2rem 1rem;">
+    <h1 class="section-title">Track Your Order #{{ order.id }}</h1>
+    <div style="max-width: 800px; margin: auto;">
+        <!-- Order Status Timeline -->
+        <div class="timeline">
+            <div class="timeline-item {% if order.status == 'Processing' or order.status == 'Shipped' or order.status == 'Delivered' %}complete{% endif %}">
+                <div class="timeline-icon"><i class="fas fa-cogs"></i></div>
+                <div class="timeline-content"><h4>Processing</h4><p>We've received your order and are getting it ready.</p></div>
+            </div>
+            <div class="timeline-item {% if order.status == 'Shipped' or order.status == 'Delivered' %}complete{% endif %}">
+                 <div class="timeline-icon"><i class="fas fa-truck"></i></div>
+                <div class="timeline-content"><h4>Shipped</h4><p>Your order is on its way to you.</p></div>
+            </div>
+            <div class="timeline-item {% if order.status == 'Delivered' %}complete{% endif %}">
+                 <div class="timeline-icon"><i class="fas fa-box-open"></i></div>
+                <div class="timeline-content"><h4>Delivered</h4><p>Your order has been delivered. Enjoy your book!</p></div>
+            </div>
+        </div>
+        <!-- You can add more details like shipping address and items here -->
+    </div>
+</main>
+{% endblock %}

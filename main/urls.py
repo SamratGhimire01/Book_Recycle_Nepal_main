@@ -16,19 +16,29 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
 
     # --- User Dashboards & Profiles ---
-    path('profile/<str:username>/', views.profile_view, name='profile_view'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
+    path('profile/<str:username>/', views.profile_view, name='profile_view'),
+    
     path('my-listings/', views.my_listings_dashboard, name='my_listings'),
 
     # --- Book & Listing Actions ---
     path('sell/', views.sell_book, name='sell_book'),
     path('my-listings/edit/<int:book_id>/', views.edit_listing, name='edit_listing'),
     path('my-listings/delete/<int:book_id>/', views.delete_listing, name='delete_listing'),
+    path('my-orders/', views.my_orders, name='my_orders'),
 
     # --- Cart Actions ---
     path('cart/', views.view_cart, name='view_cart'),
     path('cart/add/', views.add_to_cart, name='add_to_cart'),
     path('cart/remove/', views.remove_from_cart, name='remove_from_cart'),
+    path('cart/update-selection/', views.update_cart_selection, name='update_cart_selection'),
+
+    # --- Checkout & Orders ---
+    path('checkout/', views.checkout, name='checkout'),
+    path('order/place/', views.place_order, name='place_order'),
+    
+    path('order/success/<int:order_id>/', views.order_success, name='order_success'),
+    path('order/tracking/<int:order_id>/', views.order_tracking, name='order_tracking'),
     
     # --- Reviews, Favorites, Follows ---
     path('book/<int:book_id>/review/', views.add_review, name='add_review'),

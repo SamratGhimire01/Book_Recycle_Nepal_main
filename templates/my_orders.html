@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Orders | BookRecycle Nepal{% endblock %}
+
+{% block extra_head %}
+    <!-- We can reuse the dashboard styles for consistency -->
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="container dashboard-container">
+    <h1 class="dashboard-header">My Purchase History</h1>
+
+    <div class="order-list-container">
+        {% for order in orders %}
+        <div class="order-card">
+            <div class="order-card-header">
+                <div>
+                    <p class="order-meta">ORDER PLACED</p>
+                    <p class="order-value">{{ order.created_at|date:"F d, Y" }}</p>
+                </div>
+                <div>
+                    <p class="order-meta">TOTAL</p>
+                    <p class="order-value">Rs. {{ order.total_price|floatformat:2 }}</p>
+                </div>
+                <div>
+                    <p class="order-meta">ORDER #</p>
+                    <p class="order-value">{{ order.id }}</p>
+                </div>
+            </div>
+            <div class="order-card-body">
+                <h3 class="order-status">Status: {{ order.status }}</h3>
+                {% for item in order.items.all %}
+                <div class="order-item">
+                    <img src="{{ item.book.cover_image.url }}" alt="{{ item.book.title }}" class="order-item-image">
+                    <div class="order-item-info">
+                        <a href="{% url 'book_detail' item.book.id %}" class="item-title">{{ item.book.title }}</a>
+                        <p class="item-seller">Sold by: {{ item.book.seller.username }}</p>
+                        <!-- After delivery, this is where the "Leave a Review" button will go -->
+                        {% if order.status == 'Delivered' %}
+                            <a href="{% url 'add_review' item.book.id %}" class="button button-primary review-btn">Leave a Review</a>
+                        {% endif %}
+                    </div>
+                    <a href="{% url 'order_tracking' order.id %}" class="button btn-secondary-profile">Track Order</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-message">
+            <p>You have not placed any orders yet.</p>
+            <a href="{% url 'listed_books' %}" class="button button-primary">Start Shopping</a>
+        </div>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}

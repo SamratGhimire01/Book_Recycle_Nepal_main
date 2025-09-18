@@ -1,14 +1,21 @@
+# main/views.py
+
+# ===============================
+#  1. IMPORTS
+# ===============================
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import User
-from django.http import JsonResponse
-from django.db.models import Q, Avg, Sum, Count
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.db.models import Q, Avg, Sum
 from django.template.loader import render_to_string
+import json
+from decimal import Decimal
 
-from .models import Book, BookImage, Category, Course, Profile, Review, Favorite, Follow
+from .models import Book, BookImage, Category, Course, Profile, Review, Favorite, Follow, Order, OrderItem
 from .forms import BookForm, RegistrationForm, ProfileUpdateForm, ReviewForm
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import logout
 
 
 # ===============================
@@ -32,7 +39,18 @@ def book_detail(request, book_id):
     book = get_object_or_404(Book, id=book_id, status='Available')
     similar_books = Book.objects.filter(category=book.category, status='Available').exclude(id=book.id)[:4]
     reviews = book.reviews.all().order_by('-created_at')
-    return render(request, 'book_detail.html', {'book': book, 'similar_books': similar_books, 'reviews': reviews})
+    
+    # --- THIS IS THE NEW LOGIC ---
+    # Check if the currently logged-in user is the seller of this book
+    is_seller = (request.user == book.seller)
+
+    context = {
+        'book': book,
+        'similar_books': similar_books,
+        'reviews': reviews,
+        'is_seller': is_seller, # <-- Pass this boolean to the template
+    }
+    return render(request, 'book_detail.html', context)
 
 def all_categories(request):
     categories = Category.objects.all().order_by('name')
@@ -108,25 +126,24 @@ def my_listings_dashboard(request):
 
 
 # ===============================
-#  4. BOOK LISTING ACTIONS
+#  4. BOOK LISTING ACTIONS & REVIEWS
 # ===============================
 @login_required
 def sell_book(request):
     if request.method == 'POST':
-        form = BookForm(request.POST)
-        images = request.FILES.getlist('images')
-        if form.is_valid() and len(images) > 0:
-            book = form.save(commit=False)
-            book.seller = request.user
-            book.cover_image = images[0]
-            book.save()
-            for image_file in images:
-                BookImage.objects.create(book=book, image=image_file)
-            return redirect('my_listings')
-        else:
-            if len(images) == 0:
+        form = BookForm(request.POST, request.FILES)
+        if form.is_valid():
+            images = request.FILES.getlist('images')
+            if len(images) > 0:
+                book = form.save(commit=False)
+                book.seller = request.user
+                book.cover_image = images[0]
+                book.save()
+                for image_file in images:
+                    BookImage.objects.create(book=book, image=image_file)
+                return redirect('my_listings')
+            else:
                 form.add_error(None, "Please upload at least one image.")
-            return render(request, 'sell_book.html', {'form': form})
     else:
         form = BookForm()
     return render(request, 'sell_book.html', {'form': form})
@@ -176,8 +193,97 @@ def add_review(request, book_id):
 
 
 # ===============================
-#  5. API-LIKE VIEWS (for JavaScript)
+#  5. CART & CHECKOUT FLOW
 # ===============================
+def view_cart(request):
+    cart = request.session.get('cart', {})
+    book_ids = [int(bid) for bid in cart.keys()]
+    books_in_cart = Book.objects.filter(id__in=book_ids)
+    
+    selected_book_ids_str = request.session.get('selected_for_checkout', [str(bid) for bid in book_ids])
+    selected_book_ids = [int(bid) for bid in selected_book_ids_str]
+    
+    # subtotal will be a Decimal because book.price is a DecimalField
+    subtotal = sum(book.price for book in books_in_cart if book.id in selected_book_ids)
+    delivery_charge = Decimal('100.00')
+    voucher_discount = Decimal('0.00')
+    grand_total = subtotal + delivery_charge - voucher_discount
+    context = {
+        'books_in_cart': books_in_cart,
+        'selected_book_ids': selected_book_ids,
+        'subtotal': subtotal,
+        'delivery_charge': delivery_charge,
+        'voucher_discount': voucher_discount,
+        'grand_total': grand_total,
+    }
+    return render(request, 'cart.html', context)
+
+@login_required
+def checkout(request):
+    selected_ids = request.session.get('selected_for_checkout', [])
+    if not selected_ids: return redirect('view_cart')
+    books_for_checkout = Book.objects.filter(id__in=selected_ids)
+    total_price = sum(book.price for book in books_for_checkout)
+    return render(request, 'checkout.html', {'books_in_cart': books_for_checkout, 'total_price': total_price})
+
+@login_required
+def place_order(request):
+    selected_ids = request.session.get('selected_for_checkout', [])
+    if not selected_ids or request.method != 'POST': return redirect('view_cart')
+    books_in_order = Book.objects.filter(id__in=selected_ids)
+    total_price = sum(book.price for book in books_in_order)
+    profile = request.user.profile
+    shipping_address = f"{profile.full_name}\n{profile.address_line_1}\n{profile.city}\nPhone: {profile.phone_number}"
+    order = Order.objects.create(buyer=request.user, shipping_address=shipping_address, total_price=total_price, payment_method='COD')
+    for book in books_in_order:
+        OrderItem.objects.create(order=order, book=book, price=book.price)
+        book.status = 'Sold'; book.save()
+    request.session['cart'] = {}; request.session['selected_for_checkout'] = []
+    return redirect('order_success', order_id=order.id)
+
+def order_success(request, order_id):
+    order = get_object_or_404(Order, id=order_id, buyer=request.user)
+    return render(request, 'order_success.html', {'order': order})
+
+@login_required
+def order_tracking(request, order_id):
+    order = get_object_or_404(Order, id=order_id, buyer=request.user)
+    return render(request, 'order_tracking.html', {'order': order})
+
+
+# ===============================
+#  6. API-LIKE VIEWS (for JavaScript)
+# ===============================
+@login_required
+def add_to_cart(request):
+    if request.method == 'POST':
+        book_id = request.POST.get('book_id')
+        book = get_object_or_404(Book, id=book_id)
+        cart = request.session.get('cart', {})
+        cart[str(book_id)] = 1
+        request.session['cart'] = cart
+        return JsonResponse({'status': 'ok', 'message': f'"{book.title}" added to cart.', 'cart_item_count': len(cart)})
+    return JsonResponse({'status': 'error'}, status=400)
+
+@login_required
+def remove_from_cart(request):
+    if request.method == 'POST':
+        book_id = request.POST.get('book_id')
+        cart = request.session.get('cart', {})
+        if str(book_id) in cart:
+            del cart[str(book_id)]
+            request.session['cart'] = cart
+        return JsonResponse({'status': 'ok'})
+    return JsonResponse({'status': 'error'}, status=400)
+
+@login_required
+def update_cart_selection(request):
+    if request.method == 'POST':
+        selected_ids = request.POST.getlist('selected_ids[]')
+        request.session['selected_for_checkout'] = selected_ids
+        return JsonResponse({'status': 'ok'})
+    return HttpResponseBadRequest("Invalid request method")
+
 def live_search_books(request):
     search_query = request.GET.get('q', '')
     if len(search_query) > 2:
@@ -209,109 +315,34 @@ def update_theme(request):
             profile.save()
             return JsonResponse({'status': 'ok'})
     return JsonResponse({'status': 'error'}, status=400)
+
 @login_required
 def toggle_follow(request):
     if request.method == 'POST':
-        # Get the ID of the user to be followed from the form data
         user_to_follow_id = request.POST.get('user_to_follow_id')
-        
         if user_to_follow_id:
             try:
-                # Find the user object that the current user wants to follow
                 user_to_follow = User.objects.get(id=user_to_follow_id)
-                
-                # Prevent users from following themselves
                 if user_to_follow == request.user:
                      return JsonResponse({'status': 'error', 'message': 'You cannot follow yourself.'}, status=400)
-
-                # Check if the current user is already following them
-                follow_instance, created = Follow.objects.get_or_create(
-                    follower=request.user,
-                    followed=user_to_follow
-                )
-
-                if created:
-                    # If the instance was just created, it means they are now following
-                    is_following = True
-                else:
-                    # If the instance already existed, it means they want to unfollow
-                    follow_instance.delete()
-                    is_following = False
-                
-                # Send a success response back to the JavaScript
-                return JsonResponse({'status': 'ok', 'is_following': is_following})
-
+                favorite, created = Follow.objects.get_or_create(follower=request.user, followed=user_to_follow)
+                if not created:
+                    favorite.delete()
+                return JsonResponse({'status': 'ok', 'is_following': created})
             except User.DoesNotExist:
                 return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
-
-    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
-
-# main/views.py
-@login_required
-def add_to_cart(request):
-    if request.method == 'POST':
-        book_id_str = request.POST.get('book_id')
-        if book_id_str:
-            book = get_object_or_404(Book, id=int(book_id_str))
-            cart = request.session.get('cart', {})
-            
-            cart[book_id_str] = 1 
-            request.session['cart'] = cart
-            
-            # --- THIS IS THE CRITICAL IMPROVEMENT ---
-            # Return the new number of items in the cart directly in the response.
-            return JsonResponse({
-                'status': 'ok',
-                'message': f'"{book.title}" was added to your cart.',
-                'cart_item_count': len(cart) # <-- ADD THIS
-            })
-            
     return JsonResponse({'status': 'error'}, status=400)
 
 @login_required
-def remove_from_cart(request):
-    if request.method == 'POST':
-        book_id_str = request.POST.get('book_id')
-        if book_id_str:
-            cart = request.session.get('cart', {})
-            if book_id_str in cart:
-                del cart[book_id_str]
-                request.session['cart'] = cart
-            return JsonResponse({'status': 'ok', 'message': 'Book removed from cart.'})
-    return JsonResponse({'status': 'error'}, status=400)
-
-# main/views.py
-
-def view_cart(request):
+def my_orders(request):
     """
-    Displays the user's shopping cart with delivery charges.
+    Shows a list of all orders placed by the currently logged-in user.
     """
-    cart = request.session.get('cart', {})
-    book_ids = cart.keys()
-    books_in_cart = Book.objects.filter(id__in=book_ids)
+    # Fetch all orders where the 'buyer' is the current user.
+    # 'prefetch_related' is a performance optimization to get all related items efficiently.
+    orders = Order.objects.filter(buyer=request.user).prefetch_related('items__book').order_by('-created_at')
     
-    subtotal = sum(book.price for book in books_in_cart)
-    
-    # --- NEW LOGIC: DELIVERY CHARGES ---
-    delivery_charge = 0
-    if books_in_cart.exists(): # Only add delivery charge if the cart is not empty
-        delivery_charge = 100 
-    
-    # --- NEW LOGIC: VOUCHER (Placeholder) ---
-    # For now, we'll simulate a voucher. A real system would be more complex.
-    voucher_discount = 0
-    voucher_code = request.GET.get('voucher', '') # Check if a voucher was submitted
-    if voucher_code.upper() == 'RECYCLE10':
-        voucher_discount = subtotal * 0.10 # 10% discount
-    
-    grand_total = (subtotal - voucher_discount) + delivery_charge
-        
     context = {
-        'books_in_cart': books_in_cart,
-        'subtotal': subtotal,
-        'delivery_charge': delivery_charge,
-        'voucher_discount': voucher_discount,
-        'grand_total': grand_total,
-        'voucher_code': voucher_code,
+        'orders': orders
     }
-    return render(request, 'cart.html', context)
+    return render(request, 'my_orders.html', context)

@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Checkout | BookRecycle Nepal{% endblock %}
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+{% endblock %}
+{% block content %}
+<main class="container checkout-container">
+    <div class="checkout-layout">
+        <!-- Left Column: Shipping and Items -->
+        <div class="checkout-main">
+            <h1 class="checkout-header">Checkout</h1>
+            
+            <!-- Shipping Address Section -->
+            <div class="checkout-section">
+                <div class="section-header">
+                    <h2>Shipping Address</h2>
+                    <a href="{% url 'edit_profile' %}" class="edit-link">Edit</a>
+                </div>
+                <div class="address-card">
+                    <p><strong>{{ request.user.profile.full_name|default:request.user.username }}</strong></p>
+                    <p>{{ request.user.profile.address_line_1|default:"No address set" }}</p>
+                    <p>{{ request.user.profile.city|default:"Please update your profile" }}</p>
+                    <p>Phone: {{ request.user.profile.phone_number|default:"N/A" }}</p>
+                </div>
+            </div>
+
+            <!-- Items in Cart Section -->
+            <div class="checkout-section">
+                <div class="section-header">
+                    <h2>Items in Your Order</h2>
+                </div>
+                {% for book in books_in_cart %}
+                <div class="checkout-item">
+                    <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" class="item-image">
+                    <div class="item-info">
+                        <p class="item-title">{{ book.title }}</p>
+                        <p class="item-seller">Sold by: {{ book.seller.username }}</p>
+                    </div>
+                    <p class="item-price">Rs. {{ book.price|floatformat:0 }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Right Column: Order Summary -->
+        <div class="order-summary-sticky">
+    <div class="order-summary">
+        <h2 class="summary-title">Order Summary</h2>
+        <!-- ... (your summary rows for items and delivery fee) ... -->
+        <hr class="summary-divider">
+        <div class.summary-row total">
+            <span>Total</span>
+            <span>Rs. {{ total_price|add:100|floatformat:2 }}</span>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- == START: NEW PAYMENT METHOD SECTION                  == -->
+        <!-- ======================================================== -->
+        <div class="payment-method-section">
+            <h3 class="payment-title">Payment Method</h3>
+            
+            <div class="payment-option selected">
+                <input type="radio" id="cod" name="payment_method" value="COD" checked>
+                <label for="cod">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>Cash on Delivery</span>
+                </label>
+            </div>
+            
+            <div class="payment-option disabled">
+                <input type="radio" id="esewa" name="payment_method" value="ESEWA" disabled>
+                <label for="esewa">
+                    <img src="https://blog.esewa.com.np/wp-content/uploads/2022/11/esewa-icon.png" alt="eSewa">
+                    <span>eSewa</span>
+                    <small>(Coming Soon)</small>
+                </label>
+            </div>
+        </div>
+
+        <!-- This form now submits to our new 'place_order' view -->
+        <form action="{% url 'place_order' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="button button-primary checkout-btn">Place Order</button>
+        </form>
+        <!-- ======================================================== -->
+        <!-- == END: NEW PAYMENT METHOD SECTION                    == -->
+        <!-- ======================================================== -->
+    </div>
+</div>
+</main>
+{% endblock %}
